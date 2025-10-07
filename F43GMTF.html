@@ -21,7 +21,8 @@
  <h2>E) Sterilization Setting Control</h2>
 
   <label>Travel Form number (required):</label>
-  <input id="filenameInput" type="text" placeholder="PLDC082025/0003" />
+  <input id="filenameInput" type="text" placeholder="PLDC082025/0003" /><br>
+<label id="filenameMsg" style="font-size:13px;display:block;margin-top:4px;"></label>
 
   <div class="section">
    <h4>Image A :Sticker Location</h4>
@@ -43,6 +44,46 @@
 
   <script>
     const filenameInput = document.getElementById("filenameInput");
+
+const filenameMsg = document.getElementById("filenameMsg");
+
+function validateFilename(e) {
+  const val = filenameInput.value.trim();
+
+  if (!val) {
+    filenameMsg.textContent = "";
+    return;
+  }
+
+  const MIN_LEN = 14; // P + 2–5 + 6 + "/" + 4 = 14–17
+
+  if (e && e.type === "keyup" && val.length < MIN_LEN) {
+    filenameMsg.textContent = "";
+    return;
+  }
+
+  const re = /^P([A-Z]{2,5})(\d{2})(\d{4})\/(\d{4})$/i;
+  const m = re.exec(val);
+
+  let msg = "⚠️ Format Error";
+  let color = "red";
+
+  if (m) {
+    const month = parseInt(m[2], 10);
+    if (month >= 1 && month <= 12) {
+      msg = "✅ Good";
+      color = "green";
+    }
+  }
+
+  filenameMsg.textContent = msg;
+  filenameMsg.style.color = color;
+}
+
+filenameInput.addEventListener("keyup", validateFilename);
+filenameInput.addEventListener("change", validateFilename);
+
+    
     const fileInputA = document.getElementById("fileInputA");
     const fileInputB = document.getElementById("fileInputB");
     const previewA = document.getElementById("previewA");
@@ -153,5 +194,6 @@
   </script>
 </body>
 </html>
+
 
 
