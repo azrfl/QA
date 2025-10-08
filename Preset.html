@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QA Sampling Calculator</title>
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f9f9f9;
+}
+.input{display:flex;}
+
+    h2 {
+      margin-bottom: 10px;
+    }
+.section .inputs {
+  display: flex;
+  flex-wrap: wrap;   /* allows wrapping to next line */
+  gap: 16px;         /* spacing between fieldsets */
+}
+
+.section .inputs fieldset {
+  display: inline-block;
+  min-width: 200px;  /* adjust width */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.section .inputs legend {
+      margin-bottom: 0px;
+  font-size: 0.9rem;
+  padding: 0 6px;     /* space inside legend */
+}
+.section .inputs input {
+  display: block;
+  margin-top: 6px;
+  width: 100%;
+  padding: 4px 6px;
+  box-sizing: border-box;
+}
+
+
+    .inputs input {
+      width: 200px;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 6px;
+      text-align: center;
+    }
+    th {
+      background: #eee;
+    }
+.minit {background-color: #fff;}
+.minit td , .minit th {padding:1px 1px ;font-size: 9px;}
+  </style>
+</head>
+<body>
+  <!-- Section A: Input -->
+<h2>PRESET Sampling Calculator (G1) Non-USAW </h2>
+
+  <div class="form-group" hidden>
+                      
+                        <label>Category</label>
+                        <select class="form-control" id="InspectionPlanKey" name="InspectionPlanKey" required="">
+                          <option class="form-control" name="InspectionPlanKey" value=""> Category</option>
+                                                        <option name="InspectionPlanKey" value="USA (SINGLE)">USA (SINGLE)</option>
+                                                        <option name="InspectionPlanKey" value="USA">USA</option>
+                                                        <option name="InspectionPlanKey" value="SELECTED MOH">SELECTED MOH</option>
+                                                        <option name="InspectionPlanKey" value="PREMIUM MEDICAL">PREMIUM MEDICAL</option>
+                                                        <option name="InspectionPlanKey" value="STANDARD MEDICAL">STANDARD MEDICAL</option>
+                                                        <option name="InspectionPlanKey" value="NON MEDICAL">NON MEDICAL</option>
+                                                        <option name="InspectionPlanKey" value="2ND GRADE">2ND GRADE</option>
+                                                        <option name="InspectionPlanKey" value="RETURNED CONTAINER">RETURNED CONTAINER</option>
+                                                        <option name="InspectionPlanKey" value="SAMPLE">SAMPLE</option>
+                                                  </select>
+                      </div>
+ <div class="form-group"> <input type="text" id="size" placeholder="Size">
+<input type="text" id="solineitem" placeholder="So Item"> </div>
+
+
+<div class="section" id="section-a">
+  <h3>Section A: Input</h3>
+  <div class="inputs">
+
+    <fieldset>
+      <legend>Total Pieces/Size</legend>
+      <input type="number" id="totalPieces" />
+    </fieldset>
+
+    <fieldset>
+      <legend>Total Pieces/Carton</legend>
+      <input type="number" id="piecesPerCarton" />
+    </fieldset>
+
+    <fieldset>
+      <legend>Total Carton/Pallet</legend>
+      <input type="number" id="cartonPerPallet" />
+    </fieldset>
+
+    <fieldset>
+      <legend>QA Max Pieces/Lot</legend>
+      <input type="number" id="maxPiecesLot" value="1000000" />
+    </fieldset>
+
+    <fieldset>
+      <legend>QA Sample Inner/Carton</legend>
+      <input type="number" id="sampleInnerCarton" value="1" />
+    </fieldset>
+
+  </div>
+</div>
+
+  <!-- Section B: Output Table -->
+  <div class="section" id="section-b">
+    <h3>Section B: Lots Table</h3>
+    <table id="lotsTable">
+      <thead>
+        <tr>
+          <th>Lot</th>
+          <th>Total Pallet/Lot</th>
+          <th>Total Pcs/Lot</th>
+          <th>Actual Total Ctn/Lot</th>
+          <th>Total Sample Size</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section C: Additional Output -->
+  <div class="section" id="section-c">
+  
+    <div id="summary"></div>
+  </div>
+
+<script>
+
+  function clearItemTable() {
+  const tbody = document.querySelector("#item_table tbody");
+  if (tbody) tbody.innerHTML = "";
+}
+
+  const inputs = document.querySelectorAll('#section-a input');
+  inputs.forEach(inp => inp.addEventListener('input', calculate));
+
+  function calculate() {
+    const totalPieces = parseInt(document.getElementById('totalPieces').value) || 0;
+    const piecesPerCarton = parseInt(document.getElementById('piecesPerCarton').value) || 0;
+    const cartonPerPallet = parseInt(document.getElementById('cartonPerPallet').value) || 0;
+    const maxPiecesLot = parseInt(document.getElementById('maxPiecesLot').value) || 1000000;
+
+    const lotsTableBody = document.querySelector('#lotsTable tbody');
+    lotsTableBody.innerHTML = '';
+    if (totalPieces <= 0 || piecesPerCarton <= 0 || cartonPerPallet <= 0) return;
+
+    const palletCapacityPieces = piecesPerCarton * cartonPerPallet;
+    let remainingPieces = totalPieces;
+    let lotNumber = 1;
+    let totalLots = 0, totalCartons = 0;
+
+    while (remainingPieces > 0) {
+      let maxPalletsPerLot = Math.floor(maxPiecesLot / palletCapacityPieces);
+      if (maxPalletsPerLot < 1) maxPalletsPerLot = 1;
+
+      let palletsThisLot = Math.min(maxPalletsPerLot, Math.ceil(remainingPieces / palletCapacityPieces));
+      let pcsThisLot = Math.min(palletsThisLot * palletCapacityPieces, remainingPieces);
+      let cartonsThisLot = pcsThisLot / piecesPerCarton;
+      let sampleSize = getSampleSize(pcsThisLot);   // ✅ use per-row Total Pcs/Lot
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${lotNumber}</td>
+        <td>${palletsThisLot}</td>
+        <td>${pcsThisLot}</td>
+        <td>${cartonsThisLot}</td>
+        <td>${sampleSize}</td>
+      `;
+      lotsTableBody.appendChild(row);
+
+      remainingPieces -= pcsThisLot;
+      lotNumber++;
+      totalLots++;
+      totalCartons += cartonsThisLot;
+    }
+
+    document.getElementById('summary').innerHTML = `
+      <p><strong>Total Lots:</strong> ${totalLots}</p>
+      <p><strong>Total Cartons:</strong> ${totalCartons}</p>
+    `;
+  clearItemTable()
+
+  }
+
+  function getSampleSize(ssVal) {
+    if (ssVal > 500000) return 500;
+    else if (ssVal > 150000) return 315;
+    else if (ssVal > 35000) return 200;
+    else if (ssVal > 10000) return 125;
+    else if (ssVal > 3200) return 80;
+    else if (ssVal > 1200) return 50;
+    else if (ssVal > 500) return 32;
+    else return 0;
+  }
+</script>
+    <h3>Section C: Select AQL</h3>
+                    <table class="table" id="AQL_table" style="border: none;">
+                      <tr>
+                        <th>AQL Holes
+                          <select class="form-control" id="AQL_holes" name="AQL_holes">
+                            <option class="form-control" value="N/A"> N/A</option>
+                            <option class="form-control" value="0.065"> 0.065</option>
+                            <option class="form-control" value="0.10"> 0.10</option>
+                            <option class="form-control" value="0.15"> 0.15</option>
+                            <option class="form-control" value="0.25"> 0.25</option>
+                            <option class="form-control" value="0.40"> 0.40</option>
+                            <option class="form-control" value="0.65"> 0.65</option>
+                            <option class="form-control" value="1.00"> 1.0</option>
+                            <option class="form-control" value="1.50"> 1.5</option>
+                            <option class="form-control" value="2.50"> 2.5</option>
+                            <option class="form-control" value="4.00"> 4.0</option>
+                            <option class="form-control" value="6.50"> 6.5</option>
+                          </select>
+                        </th>
+                        <th>AQL NFG
+                          <select class="form-control" id="AQL_NFG" name="AQL_NFG">
+                            <option class="form-control" value="N/A"> N/A</option>
+                            <option class="form-control" value="0.065"> 0.065</option>
+                            <option class="form-control" value="0.10"> 0.10</option>
+                            <option class="form-control" value="0.15"> 0.15</option>
+                            <option class="form-control" value="0.25"> 0.25</option>
+                            <option class="form-control" value="0.40"> 0.40</option>
+                            <option class="form-control" value="0.65"> 0.65</option>
+                            <option class="form-control" value="1.00"> 1.0</option>
+                            <option class="form-control" value="1.50"> 1.5</option>
+                            <option class="form-control" value="2.50"> 2.5</option>
+                            <option class="form-control" value="4.00"> 4.0</option>
+                            <option class="form-control" value="6.50"> 6.5</option>
+                          </select>
+                        </th>
+                        <th>AQL NAG
+                          <select class="form-control" id="AQL_NAG" name="AQL_NAG">
+                            <option class="form-control" value="N/A"> N/A</option>
+                            <option class="form-control" value="0.065"> 0.065</option>
+                            <option class="form-control" value="0.10"> 0.10</option>
+                            <option class="form-control" value="0.15"> 0.15</option>
+                            <option class="form-control" value="0.25"> 0.25</option>
+                            <option class="form-control" value="0.40"> 0.40</option>
+                            <option class="form-control" value="0.65"> 0.65</option>
+                            <option class="form-control" value="1.00"> 1.0</option>
+                            <option class="form-control" value="1.50"> 1.5</option>
+                            <option class="form-control" value="2.50"> 2.5</option>
+                            <option class="form-control" value="4.00"> 4.0</option>
+                            <option class="form-control" value="6.50"> 6.5</option>
+                          </select>
+                        </th>
+                        <th>AQL Major
+                          <select class="form-control" id="AQL_Major" name="AQL_Major">
+                            <option class="form-control" value="N/A"> N/A</option>
+                            <option class="form-control" value="0.065"> 0.065</option>
+                            <option class="form-control" value="0.10"> 0.10</option>
+                            <option class="form-control" value="0.15"> 0.15</option>
+                            <option class="form-control" value="0.25"> 0.25</option>
+                            <option class="form-control" value="0.40"> 0.40</option>
+                            <option class="form-control" value="0.65"> 0.65</option>
+                            <option class="form-control" value="1.00"> 1.0</option>
+                            <option class="form-control" value="1.50"> 1.5</option>
+                            <option class="form-control" value="2.50"> 2.5</option>
+                            <option class="form-control" value="4.00"> 4.0</option>
+                            <option class="form-control" value="6.50"> 6.5</option>
+                          </select>
+                        </th>
+                        <th>AQL Minor
+                          <select class="form-control" id="AQL_Minor" name="AQL_Minor">
+                            <option class="form-control" value="N/A"> N/A</option>
+                            <option class="form-control" value="0.065"> 0.065</option>
+                            <option class="form-control" value="0.10"> 0.10</option>
+                            <option class="form-control" value="0.15"> 0.15</option>
+                            <option class="form-control" value="0.25"> 0.25</option>
+                            <option class="form-control" value="0.40"> 0.40</option>
+                            <option class="form-control" value="0.65"> 0.65</option>
+                            <option class="form-control" value="1.00"> 1.0</option>
+                            <option class="form-control" value="1.50"> 1.5</option>
+                            <option class="form-control" value="2.50"> 2.5</option>
+                            <option class="form-control" value="4.00"> 4.0</option>
+                            <option class="form-control" value="6.50"> 6.5</option>
+                          </select>
+                        </th>
+                        <th>AQL Good Glove
+                          <select class="form-control" id="AQL_GG" name="AQL_GG">
+                            <option class="form-control" value="N/A"> N/A</option>
+                            <option class="form-control" value="0.065"> 0.065</option>
+                            <option class="form-control" value="0.10"> 0.10</option>
+                            <option class="form-control" value="0.15"> 0.15</option>
+                            <option class="form-control" value="0.25"> 0.25</option>
+                            <option class="form-control" value="0.40"> 0.40</option>
+                            <option class="form-control" value="0.65"> 0.65</option>
+                            <option class="form-control" value="1.00"> 1.0</option>
+                            <option class="form-control" value="1.50"> 1.5</option>
+                            <option class="form-control" value="2.50"> 2.5</option>
+                            <option class="form-control" value="4.00"> 4.0</option>
+                            <option class="form-control" value="6.50"> 6.5</option>
+                          </select>
+                        </th>
+                        <Th>Reference G1
+<table class="minit">
+<tr><th>Letter</th><th>S.Size</th><th>0.065</th><th>0.10</th><th>0.15</th><th>0.25</th><th>0.40</th><th>0.65</th><th>1.0</th><th>1.5</th><th>2.5</th><th>4.0</th><th>6.5</th></tr>
+<tr><td>K</td><td>125</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>2</td><td>3</td><td>5</td><td>7</td><td>10</td><td>14</td></tr>
+<tr><td>L</td><td>200</td><td>0</td><td>0</td><td>0</td><td>1</td><td>2</td><td>3</td><td>5</td><td>7</td><td>10</td><td>14</td><td>21</td></tr>
+<tr><td>M</td><td>315</td><td>0</td><td>0</td><td>1</td><td>2</td><td>3</td><td>5</td><td>7</td><td>10</td><td>14</td><td>21</td><td>33</td></tr>
+<tr><td>N</td><td>500</td><td>1</td><td>1</td><td>2</td><td>3</td><td>5</td><td>7</td><td>10</td><td>14</td><td>21</td><td>33</td><td>52</td></tr>
+</table>
+
+                        </Th>
+                      </tr>
+                    </table>
+
+
+
+
+<script>
+const acceptarray = [
+  { code: "K", Key: "125", "0.065": 0, "0.10": 0, "0.15": 0, "0.25": 1, "0.40": 1, "0.65": 2, "1.00": 3, "1.50": 5, "2.50": 7, "4.00": 10, "6.50": 14 },
+  { code: "L", Key: "200", "0.065": 0, "0.10": 0, "0.15": 0, "0.25": 1, "0.40": 2, "0.65": 3, "1.00": 5, "1.50": 7, "2.50": 10, "4.00": 14, "6.50": 21 },
+  { code: "M", Key: "315", "0.065": 0, "0.10": 0, "0.15": 1, "0.25": 2, "0.40": 3, "0.65": 5, "1.00": 7, "1.50": 10, "2.50": 14, "4.00": 21, "6.50": 33 },
+  { code: "N", Key: "500", "0.065": 1, "0.10": 1, "0.15": 2, "0.25": 3, "0.40": 5, "0.65": 7, "1.00": 10, "1.50": 14, "2.50": 21, "4.00": 33, "6.50": 52 },
+];
+
+function getCurrentLot() {
+  const lotsTable = document.querySelector("#lotsTable tbody");
+  const itemTable = document.querySelector("#item_table tbody");
+  const size = document.getElementById("size").value;
+  const soItem = document.getElementById("solineitem").value;
+
+  // Read all AQL dropdown selections
+  const AQLSelections = {
+    holes: document.getElementById("AQL_holes").value,
+    NFG: document.getElementById("AQL_NFG").value,
+    NAG: document.getElementById("AQL_NAG").value,
+    Major: document.getElementById("AQL_Major").value,
+    Minor: document.getElementById("AQL_Minor").value,
+    GG: document.getElementById("AQL_GG").value,
+  };
+
+  itemTable.innerHTML = ""; // clear old rows
+  let palletCounter = 1;
+
+  for (const row of lotsTable.rows) {
+    const cells = row.cells;
+    const lot = parseInt(cells[0].textContent.trim());
+    const totalPallet = parseInt(cells[1].textContent.trim());
+    const totalSample = parseInt(cells[4].textContent.trim());
+
+    const baseSample = Math.floor(totalSample / totalPallet);
+    const remainder = totalSample % totalPallet;
+    const sampleDistribution = Array.from({ length: totalPallet }, (_, i) =>
+      i < remainder ? baseSample + 1 : baseSample
+    );
+
+    // Match acceptarray record by Key (closest or exact match)
+    const acceptKey = acceptarray.find((x) => parseInt(x.Key) === totalSample);
+
+    // Helper: distribute acceptance value
+    const distributeAccept = (value) => {
+      if (!value || value === "N/A") return Array(totalPallet).fill(0);
+      const num = acceptKey && acceptKey[value] !== undefined ? acceptKey[value] : 0;
+      const base = Math.floor(num / totalPallet);
+      const remainder = num % totalPallet;
+      return Array.from({ length: totalPallet }, (_, i) =>
+        i < remainder ? base + 1 : base
+      );
+    };
+
+    // Precompute accept value distributions per AQL category
+    const accDistributions = {
+      holes: distributeAccept(AQLSelections.holes),
+      NFG: distributeAccept(AQLSelections.NFG),
+      NAG: distributeAccept(AQLSelections.NAG),
+      Major: distributeAccept(AQLSelections.Major),
+      Minor: distributeAccept(AQLSelections.Minor),
+      GG: distributeAccept(AQLSelections.GG),
+    };
+
+    // Build rows
+    for (let i = 0; i < totalPallet; i++) {
+      const sample = sampleDistribution[i];
+      let A, B, C, D, E, F;
+
+      if (sample % 2 === 0) {
+        A = 2; B = 1; C = sample / 2; D = 0; E = 0; F = 0;
+      } else {
+        A = 1; B = 1; C = Math.floor(sample / 2);
+        D = 1; E = 1; F = sample - (A * B * C);
+      }
+
+      const cols = [
+        size, soItem, lot, palletCounter++, // fixed cols
+        A, B, C, D, E, F,                   // sampling cols
+        sample,                             // Sample Size Visual
+        sample,                             // Sample Size APT/WTT
+        accDistributions.holes[i],          // Acc Hole
+        accDistributions.NFG[i],            // Acc Critical NFG
+        accDistributions.NAG[i],            // Acc Critical NAG
+        accDistributions.Major[i],          // Acc Major
+        accDistributions.Minor[i],          // Acc Minor
+        accDistributions.GG[i],             // Acc Good Glove
+      ];
+
+      const tr = document.createElement("tr");
+      cols.forEach((val) => {
+        const td = document.createElement("td");
+        td.textContent = val;
+        tr.appendChild(td);
+      });
+      itemTable.appendChild(tr);
+    }
+  }
+}
+
+
+</script>
+<button onclick="getCurrentLot()">GENERATE</button>
+
+                    <table id="item_table" style="border: none;"><thead>
+                   <tr>
+                      <th>Size</th>
+                      <th>SO Item Number</th>
+                      <th>Lot Count</th>
+                      <th>Pallet Number</th>
+                      <th>1. Sampling Ctn /Pallet</th>
+                      <th>1. Sample Inner /Ctn</th>
+                      <th>1. Sampling Pcs /Inner</th>
+                      <th>2. Sampling Ctn /Pallet</th>
+                      <th>2. Sample Inner /Ctn </th>
+                      <th>2. Sampling Pcs /Inner </th>
+                      <th>Sample Size Visual</th>
+                      <th>Sample Size APT/WTT</th>
+                      <th>Acc Hole</th>
+                      <th>Acc Critical NFG</th>
+                      <th>Acc Critical NAG</th>
+                      <th>Acc Major</th>
+                      <th>Acc Minor</th>
+                      <th>Acc Good Glove</th>
+            
+                    </tr></thead>
+
+ <tbody>
+
+                 
+                                      </tbody></table>
+</body>
+</html>
+          <!------th><button type="button" name="add" class="btn btn-success btn-sm add"><span class="glyphicon glyphicon-plus"></span></button></th------>
+
+
+
