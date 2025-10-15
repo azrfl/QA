@@ -72,7 +72,13 @@ function changemaxpcs() {
   let maxSize = (planSelect.value === 'USA')
         ? 500000
         : 1000000
-    maxpcs.value = maxSize
+    maxpcs.value = maxSize ;
+     const single = document.getElementById('sampleInnerCarton')
+       let singlesize = (planSelect.value === 'USA')
+        ? 2
+        : 1
+    single.value = singlesize
+     
 calculate()
 
 }
@@ -343,6 +349,7 @@ function getCurrentLot() {
 ;
 
  changemaxpcs()
+
 
 
 
