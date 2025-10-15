@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QA Sampling Calculator</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <style>
+        .input {
+            display: flex;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        .section .inputs {
+            display: flex;
+            flex-wrap: wrap;
+            /* allows wrapping to next line */
+            gap: 16px;
+            /* spacing between fieldsets */
+        }
+
+        .section .inputs fieldset {
+            display: inline-block;
+            min-width: 200px;
+            /* adjust width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .section .inputs legend {
+            margin-bottom: 0px;
+            font-size: 0.9rem;
+            padding: 0 6px;
+            /* space inside label */
+        }
+
+        .section .inputs input {
+            display: block;
+            margin-top: 6px;
+            width: 100%;
+            padding: 4px 6px;
+            box-sizing: border-box;
+        }
+
+
+        .inputs input {
+            width: 200px;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #dfdfdf;
+        }
+
+        th,
+        td {
+            padding: 6px;
+            text-align: center;
+        }
+
+        th {
+            background: #ebf7ff;
+        }
+
+        .minit {
+            background-color: #fff;
+        }
+
+        .minit td,
+        .minit th {
+            padding: 1px 1px;
+            font-size: 9px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Section A: Input -->
+
+
+
+
+
+    <div id="wrapper" style="padding-left: 20px;">
+   
+        <div id="page-wrapper" class="preset-form-wrapper" style="min-height: 925px;width: calc(100vw - 50px);">
+            <div class="rowX">
+                <div class="col-lg-13">
+                    <h4 class="page-header">QUALITY RECORD E SYSTEM (QREX)</h4>
+                    <h2>PRESET Sampling Calculator Dev</h2>
+                </div>
+                <!-- /.col-lg-13 -->
+            </div>
+            <!-- /.row -->
+            <div class="rowX">
+                <div class="col-lg-13">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Preset Lot Details</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <!-- --------------------------------------------------------------------------------- -->
+
+                            <div class="card-body">
+                                <div class="rowX">
+                                    <div class="col-md-6">
+                                        <!-- SELECT FACTORY /.form-group -->
+                                        <div class="form-group">
+                                            <label>Factory</label>
+                                            <select class="form-control" id="PlantKey" name="PlantKey" required="">
+                                                <option class="form-control" name="PlantKey" value=""> Factory</option>
+                                                <option name="PlantKey" value="F02">F02 </option>
+
+                                                <option name="PlantKey" value="F03">F03 </option>
+                                                <option name="PlantKey" value="F04">F04 </option>
+                                                <option name="PlantKey" value="F05">F05 </option>
+                                                <option name="PlantKey" value="F05C">F05C </option>
+                                                <option name="PlantKey" value="F05B">F05B </option>
+                                                <option name="PlantKey" value="F06A">F06A </option>
+                                                <option name="PlantKey" value="F06B">F06B </option>
+                                                <option name="PlantKey" value="F07AB">F07AB </option>
+                                                <option name="PlantKey" value="F07C">F07C </option>
+                                                <option name="PlantKey" value="F07A2">F07A2 </option>
+                                                <option name="PlantKey" value="F09">F09 </option>
+                                                <option name="PlantKey" value="F10">F10 </option>
+                                                <option name="PlantKey" value="F11">F11 </option>
+                                                <option name="PlantKey" value="F12">F12 </option>
+                                                <option name="PlantKey" value="F13">F13 </option>
+                                                <option name="PlantKey" value="F14">F14 </option>
+                                                <option name="PlantKey" value="F15">F15 </option>
+                                                <option name="PlantKey" value="F18B">F18B </option>
+                                                <option name="PlantKey" value="F18G">F18G </option>
+                                                <option name="PlantKey" value="F19">F19 </option>
+                                                <option name="PlantKey" value="F20">F20 </option>
+                                                <option name="PlantKey" value="F21">F21 </option>
+                                                <option name="PlantKey" value="F22">F22 </option>
+                                                <option name="PlantKey" value="F23">F23 </option>
+                                                <option name="PlantKey" value="F24">F24 </option>
+                                                <option name="PlantKey" value="F25">F25 </option>
+                                                <option name="PlantKey" value="M26">M26 </option>
+                                                <option name="PlantKey" value="F27">F27 </option>
+                                                <option name="PlantKey" value="F29">F29 </option>
+                                                <option name="PlantKey" value="F30">F30 </option>
+                                                <option name="PlantKey" value="F31">F31 </option>
+                                                <option name="PlantKey" value="F32">F32 </option>
+                                                <option name="PlantKey" value="F33">F33 </option>
+                                                <option name="PlantKey" value="F35CD">F35CD </option>
+                                                <option name="PlantKey" value="F36">F36 </option>
+                                                <option name="PlantKey" value="F36XR">F36XR </option>
+                                                <option name="PlantKey" value="F37AB">F37AB </option>
+                                                <option name="PlantKey" value="F37CD">F37CD </option>
+                                                <option name="PlantKey" value="F37">F37 </option>
+                                                <option name="PlantKey" value="F38A">F38A </option>
+                                                <option name="PlantKey" value="F38B">F38B </option>
+                                                <option name="PlantKey" value="F39DD">F39DD </option>
+                                                <option name="PlantKey" value="F40">F40 </option>
+                                                <option name="PlantKey" value="F41">F41 </option>
+                                                <option name="PlantKey" value="F08A">F08A</option>
+                                            </select>
+                                        </div>
+                                        <!-- SO NUMBER /.form-group -->
+                                        <div class="form-group">
+                                            <label>SO Number</label>
+                                            <input type="number" class="form-control" name="SONumber"
+                                               maxlength="10" id="SONumber" placeholder="Enter SO Number" required="">
+                                            <div id="checkk"></div>
+                                        </div>
+                                        <!-- ITEM NUMBER /.form-group -->
+                                        <div class="form-group">
+                                            <label>SO Line Item Number</label>
+                                            <input type="number" class="form-control" placeholder="Enter Item Number"
+                                                name="itemnumber" id="solineitem" min="1"
+                                                required="">
+                                        </div>
+                                        <!-- SELECT BRAND /.form-group -->
+                                        <div class="form-group">
+
+                                            <label>Brand</label>
+                                            <select class="form-control" id="Brand" name="Brand" required="">
+                                                <option class="form-control" name="" value="">Brand </option>
+                                            </select>
+                                        </div>
+                                        <!-- CUSTOMER /.form-group -->
+                                        <div class="form-group">
+
+                                            <label>Customer</label>
+                                            <select class="form-control" id="Customer" name="Customer" required="">
+                                                <option class="form-control" name="" value=""> Customer</option>
+                                            </select>
+                                        </div>
+                                        <!-- CATEGORY /.form-group -->
+                                        <div class="form-group">
+
+                                            <label>Category</label>
+                                            <select class="form-control" id="InspectionPlanKey" name="InspectionPlanKey"
+                                                required="">
+                                                <option class="form-control" name="InspectionPlanKey" value=""> Category
+                                                </option>
+                                                <option name="InspectionPlanKey" value="USA (SINGLE)">USA (SINGLE)
+                                                </option>
+                                                <option name="InspectionPlanKey" value="USA">USA</option>
+                                                <option name="InspectionPlanKey" value="SELECTED MOH">SELECTED MOH
+                                                </option>
+                                                <option name="InspectionPlanKey" value="PREMIUM MEDICAL">PREMIUM MEDICAL
+                                                </option>
+                                                <option name="InspectionPlanKey" value="STANDARD MEDICAL">STANDARD
+                                                    MEDICAL</option>
+                                                <option name="InspectionPlanKey" value="NON MEDICAL">NON MEDICAL
+                                                </option>
+                                                <option name="InspectionPlanKey" value="2ND GRADE">2ND GRADE</option>
+                                                <option name="InspectionPlanKey" value="RETURNED CONTAINER">RETURNED
+                                                    CONTAINER</option>
+                                                <option name="InspectionPlanKey" value="SAMPLE">SAMPLE</option>
+                                            </select>
+                                        </div>
+                                        <!-- /.form-group -->
+                                        <!-- material_code /.form-group -->
+                                        <div class="form-group">
+
+                                            <label>Material code</label>
+                                            <input type="text" class="form-control" name="materialCode"
+                                                id="materialCode" readonly="">
+                                        </div>
+                                        <!-- country /.form-group -->
+                                        <div class="form-group">
+
+                                            <label>Country</label>
+                                            <input type="text" class="form-control" name="Country" id="Country"
+                                                readonly="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <!-- COLOUR /.form-group -->
+
+                                        <div class="form-group">
+
+                                            <input type="hidden" class="form-control" name="color-hidden"
+                                                id="color-hidden" readonly="">
+
+
+                                            <label>Colour</label>
+                                            <select class="form-control" id="GloveColourKey" name="GloveColourKey"
+                                                required="">
+                                                <option class="form-control" name="GloveColourKey" value=""> Colour
+                                                </option>
+                                                <option name="GloveColourKey" value="MP">"Magenta " </option>
+                                                <option name="GloveColourKey" value="WB">"New Turquoise " </option>
+                                                <option name="GloveColourKey" value="PG">Apple Green </option>
+                                                <option name="GloveColourKey" value="QB">Aqua Blue </option>
+                                                <option name="GloveColourKey" value="AG">Avocado Green </option>
+                                                <option name="GloveColourKey" value="AB">Azure Blue </option>
+                                                <option name="GloveColourKey" value="BK">Black </option>
+                                                <option name="GloveColourKey" value="BB">Blue </option>
+                                                <option name="GloveColourKey" value="BP">Blue Purple </option>
+                                                <option name="GloveColourKey" value="NB">BRN Blue </option>
+                                                <option name="GloveColourKey" value="BW">Brown </option>
+                                                <option name="GloveColourKey" value="QW">Brown Opaque </option>
+                                                <option name="GloveColourKey" value="EB">Cerulean Blue </option>
+                                                <option name="GloveColourKey" value="CL">Clear </option>
+                                                <option name="GloveColourKey" value="CL">Clear/Transparent/Translucent
+                                                </option>
+                                                <option name="GloveColourKey" value="KB">Cool Blue (Cobalt Blue)
+                                                </option>
+                                                <option name="GloveColourKey" value="CB">Cornflower Blue </option>
+                                                <option name="GloveColourKey" value="CM">Cream </option>
+                                                <option name="GloveColourKey" value="DB">Dark Blue </option>
+                                                <option name="GloveColourKey" value="DG">Dark Green </option>
+                                                <option name="GloveColourKey" value="GB">Dodger Blue </option>
+                                                <option name="GloveColourKey" value="IB">Electric Blue </option>
+                                                <option name="GloveColourKey" value="SG">Fluorescent Green </option>
+                                                <option name="GloveColourKey" value="FG">Forest Green </option>
+                                                <option name="GloveColourKey" value="FB">Freedom Blue </option>
+                                                <option name="GloveColourKey" value="FP">FUSCHIA PINK </option>
+                                                <option name="GloveColourKey" value="GR">Gray </option>
+                                                <option name="GloveColourKey" value="GG">Green </option>
+                                                <option name="GloveColourKey" value="GW">Green (Upper) / White (Lower)
+                                                </option>
+                                                <option name="GloveColourKey" value="GL">Grey (outer) / Blue (inner)
+                                                </option>
+                                                <option name="GloveColourKey" value="HB">Harmony Blue </option>
+                                                <option name="GloveColourKey" value="RS">Iris Blue </option>
+                                                <option name="GloveColourKey" value="YB">Jordy Blue </option>
+                                                <option name="GloveColourKey" value="BL">Lavender Blue </option>
+                                                <option name="GloveColourKey" value="LB">Light Blue </option>
+                                                <option name="GloveColourKey" value="LP">Light Purple </option>
+                                                <option name="GloveColourKey" value="MP">Magenta </option>
+                                                <option name="GloveColourKey" value="JB">Majorelle Blue </option>
+                                                <option name="GloveColourKey" value="RB">Marlin Blue </option>
+                                                <option name="GloveColourKey" value="MU">Medium Purple </option>
+                                                <option name="GloveColourKey" value="MB">MSN Blue </option>
+                                                <option name="GloveColourKey" value="NT">Natural </option>
+                                                <option name="GloveColourKey" value="XB">Navy Blue </option>
+                                                <option name="GloveColourKey" value="WB">New Turquoise </option>
+                                                <option name="GloveColourKey" value="BC">Ocean Blue </option>
+                                                <option name="GloveColourKey" value="OL">Olympic Blue </option>
+                                                <option name="GloveColourKey" value="RG">Orange </option>
+                                                <option name="GloveColourKey" value="RK">Orange (outer) / Black (inner)
+                                                </option>
+                                                <option name="GloveColourKey" value="RK">Orange outer / Black inner
+                                                </option>
+                                                <option name="GloveColourKey" value="PB">Pale Violet Blue </option>
+                                                <option name="GloveColourKey" value="EG">Pastel Green </option>
+                                                <option name="GloveColourKey" value="PL">Pearlescent Black </option>
+                                                <option name="GloveColourKey" value="PC">Pearlescent Gold </option>
+                                                <option name="GloveColourKey" value="PP">Pearlescent Pink </option>
+                                                <option name="GloveColourKey" value="PV">Pearlescent Violet </option>
+                                                <option name="GloveColourKey" value="NG">Pine Green </option>
+                                                <option name="GloveColourKey" value="PK">Pink </option>
+                                                <option name="GloveColourKey" value="MK">Premium Black </option>
+                                                <option name="GloveColourKey" value="RD">Red </option>
+                                                <option name="GloveColourKey" value="RW">Red Wine </option>
+                                                <option name="GloveColourKey" value="EK">Rose Pink </option>
+                                                <option name="GloveColourKey" value="BR">Royal Blue </option>
+                                                <option name="GloveColourKey" value="SB">Sapphire Blue (Cardinal Blue)
+                                                </option>
+                                                <option name="GloveColourKey" value="SK">Sky Blue </option>
+                                                <option name="GloveColourKey" value="SL">Space Blue </option>
+                                                <option name="GloveColourKey" value="TN">Tan </option>
+                                                <option name="GloveColourKey" value="TB">Teal Blue </option>
+                                                <option name="GloveColourKey" value="TG">Teal Green </option>
+                                                <option name="GloveColourKey" value="UB">Translucent Blue </option>
+                                                <option name="GloveColourKey" value="ZB">Turquoise </option>
+                                                <option name="GloveColourKey" value="VT">Violet </option>
+                                                <option name="GloveColourKey" value="VB">Violet Blue </option>
+                                                <option name="GloveColourKey" value="WH">White </option>
+                                                <option name="GloveColourKey" value="YW">Yellow</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- LOT NUMBER /.form-group -->
+
+                                        <div class="form-group">
+                                            <label>Lot Number</label>
+                                            <input type="input" class="form-control" placeholder="Lot Number"
+                                                id="lotnumber" name="lotnumber" required="">
+                                        </div>
+                                        <!-- PRODUCT /.form-group -->
+
+                                        <div class="form-group">
+
+                                            <label>Product</label>
+                                            <select class="form-control" id="GloveProductTypeKey"
+                                                name="GloveProductTypeKey" required="">
+                                                <option class="form-control" name="GloveProductTypeKey" value="">Product
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <!-- PRODUCT CODE /.form-group -->
+
+                                        <div class="form-group">
+
+                                            <label>Product Code</label>
+                                            <select class="form-control" id="GloveCodeKey" name="GloveCodeKey"
+                                                required="">
+                                                <option class="form-control" name="GloveCodeKey" value="">Product Code
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <!-- fg condition /.form-group -->
+
+                                        <div class="form-group">
+
+                                            <label>Inspection Stage</label>
+                                            <select class="form-control" id="fgcondition" name="fgcondition"
+                                                required="">
+                                                <option class="form-control" name="fgcondition" value="1">Finished Good
+                                                </option>
+                                                <option class="form-control" name="fgcondition" value="0">Finished Good
+                                                    Overall (Combined Size)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Size</label>
+
+                                            <div class="toolt"><sup><i class="fa fa-info-circle"
+                                                        aria-hidden="true"></i></sup>
+                                                <span class="toolttext">Only select if all pallets have same
+                                                    size*</span>
+                                            </div>
+
+                                            <select name="GloveSizeKey" id="size"
+                                                class=" form-control gloveSizePrimary">
+                                                <option value="">Size</option>
+                                                <option value="XXS">XXS</option>
+                                                <option value="XS">XS</option>
+                                                <option value="S">S</option>
+                                                <option value="M">M</option>
+                                                <option value="L">L</option>
+                                                <option value="XL">XL</option>
+                                                <option value="XXL">XXL</option>
+                                                <option value="XXXL">XXXL</option>
+                                                <option value="XS-S">XS-S</option>
+                                                <option value="S-M">S-M</option>
+                                                <option value="M-L">M-L</option>
+                                                <option value="L-XL">L-XL</option>
+                                                <option value="FS">FS</option>
+                                                <option value="5.5">5.5</option>
+                                                <option value="6.0">6.0</option>
+                                                <option value="6.5">6.5</option>
+                                                <option value="7.0">7.0</option>
+                                                <option value="7.5">7.5</option>
+                                                <option value="8.0">8.0</option>
+                                                <option value="8.5">8.5</option>
+                                                <option value="9.0">9.0</option>
+                                                <option value="9.5">9.5</option>
+                                            </select>
+                                        </div>
+                                        <!-- /.form-group -->
+                                        <!-- surface /.form-group -->
+                                        <div class="form-group">
+
+                                            <label>Surface</label>
+                                            <input type="hidden" class="form-control" name="SurfaceName"
+                                                id="SurfaceName" readonly="">
+
+                                            <select name="Surface" id="Surface" class=" form-control gloveSurface">
+                                                <option value="">Surface Type</option>
+                                                <option value="S">Smooth / Embossed Inside</option>
+                                                <option value="T">Palm Textured / Embossed Outside</option>
+                                                <option value="B">Double Embossed</option>
+                                                <option value="F">Finger Textured</option>
+                                                <option value="P">Palm Textured Tacky</option>
+                                                <option value="G">Finger Textured Tacky</option>
+                                                <option value="D">Diamond Textured</option>
+                                                <option value="H">Honey Combed</option>
+                                                <option value="Z">Customized</option>
+                                            </select>
+                                        </div>
+
+
+                                    </div>
+                                    <!-- /.col -->
+
+
+                                </div>
+                                <!-- /.row -->
+
+                            </div> <!-- /.card -->
+
+                        </div> <!-- /.panel -->
+                    </div><!-- /col -->
+                </div><!-- /row --> </div><!-- /row -->
+
+                <div class="rowX">
+                    <div class="col-lg-13">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Preset Pallet Input</div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="table-responsive">
+
+
+                                    <span id="error"></span>
+
+                                    <div class="section" id="section-a">
+                                      
+                                        <div class="inputs">
+
+                                            <fieldset>
+                                                <label>Total Pieces/Size</label>
+                                                <input type="number" id="totalPieces" />
+                                            </fieldset>
+
+                                            <fieldset>
+                                                <label>Total Pieces/Carton</label>
+                                                <input type="number" id="piecesPerCarton" />
+                                            </fieldset>
+
+                                            <fieldset>
+                                                <label>Total Carton/Pallet</label>
+                                                <input type="number" id="cartonPerPallet" />
+                                            </fieldset>
+
+                                            <fieldset>
+                                                <label>QA Max Pieces/Lot</label>
+                                                <input type="number" id="maxPiecesLot" value="1000000" />
+                                            </fieldset>
+
+                                            <fieldset>       <label>QA Sample Inner/Carton</label>
+                                              
+                                                <input type="number" id="sampleInnerCarton" value="1" />
+                                            </fieldset>
+                                            <fieldset>       
+                                              
+                                                <div id="summary"></div>
+                                            </fieldset>
+
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="section" id="section-b">
+                                      
+                                        <table id="lotsTable" contenteditable="true">
+                                            <thead>
+                                                <tr>
+                                                    <th>Lot</th>
+                                                    <th>Total Pallet/Lot</th>
+                                                    <th>Total Pcs/Lot</th>
+                                                    <th>Actual Total Ctn/Lot</th>
+                                                    <th>Total Sample Size</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+
+
+                    
+                                    <table class="table" id="AQL_table" style="border: none;">
+                                        <tbody>
+                                            <tr>
+                                                <th>AQL Holes
+                                                    <select class="form-control" id="AQL_holes" name="AQL_holes">
+                                                        <option class="form-control" value="N/A"> N/A</option>
+                                    
+                                                        <option class="form-control" value="0.10"> 0.10</option>
+                                                        <option class="form-control" value="0.15"> 0.15</option>
+                                                        <option class="form-control" value="0.25"> 0.25</option>
+                                                        <option class="form-control" value="0.40"> 0.40</option>
+                                                        <option class="form-control" value="0.65"> 0.65</option>
+                                                        <option class="form-control" value="1.00"> 1.0</option>
+                                                        <option class="form-control" value="1.50"> 1.5</option>
+                                                        <option class="form-control" value="2.50"> 2.5</option>
+                                                        <option class="form-control" value="4.00"> 4.0</option>
+                                                        <option class="form-control" value="6.50"> 6.5</option>
+                                                    </select>
+                                                </th>
+                                                <th>AQL NFG
+                                                    <select class="form-control" id="AQL_NFG" name="AQL_NFG">
+                                                        <option class="form-control" value="N/A"> N/A</option>
+                                    
+                                                        <option class="form-control" value="0.10"> 0.10</option>
+                                                        <option class="form-control" value="0.15"> 0.15</option>
+                                                        <option class="form-control" value="0.25"> 0.25</option>
+                                                        <option class="form-control" value="0.40"> 0.40</option>
+                                                        <option class="form-control" value="0.65"> 0.65</option>
+                                                        <option class="form-control" value="1.00"> 1.0</option>
+                                                        <option class="form-control" value="1.50"> 1.5</option>
+                                                        <option class="form-control" value="2.50"> 2.5</option>
+                                                        <option class="form-control" value="4.00"> 4.0</option>
+                                                        <option class="form-control" value="6.50"> 6.5</option>
+                                                    </select>
+                                                </th>
+                                                <th>AQL NAG
+                                                    <select class="form-control" id="AQL_NAG" name="AQL_NAG">
+                                                        <option class="form-control" value="N/A"> N/A</option>
+                       
+                                                        <option class="form-control" value="0.10"> 0.10</option>
+                                                        <option class="form-control" value="0.15"> 0.15</option>
+                                                        <option class="form-control" value="0.25"> 0.25</option>
+                                                        <option class="form-control" value="0.40"> 0.40</option>
+                                                        <option class="form-control" value="0.65"> 0.65</option>
+                                                        <option class="form-control" value="1.00"> 1.0</option>
+                                                        <option class="form-control" value="1.50"> 1.5</option>
+                                                        <option class="form-control" value="2.50"> 2.5</option>
+                                                        <option class="form-control" value="4.00"> 4.0</option>
+                                                        <option class="form-control" value="6.50"> 6.5</option>
+                                                    </select>
+                                                </th>
+                                                <th>AQL Major
+                                                    <select class="form-control" id="AQL_Major" name="AQL_Major">
+                                                        <option class="form-control" value="N/A"> N/A</option>
+                                
+                                                        <option class="form-control" value="0.10"> 0.10</option>
+                                                        <option class="form-control" value="0.15"> 0.15</option>
+                                                        <option class="form-control" value="0.25"> 0.25</option>
+                                                        <option class="form-control" value="0.40"> 0.40</option>
+                                                        <option class="form-control" value="0.65"> 0.65</option>
+                                                        <option class="form-control" value="1.00"> 1.0</option>
+                                                        <option class="form-control" value="1.50"> 1.5</option>
+                                                        <option class="form-control" value="2.50"> 2.5</option>
+                                                        <option class="form-control" value="4.00"> 4.0</option>
+                                                        <option class="form-control" value="6.50"> 6.5</option>
+                                                    </select>
+                                                </th>
+                                                <th>AQL Minor
+                                                    <select class="form-control" id="AQL_Minor" name="AQL_Minor">
+                                                        <option class="form-control" value="N/A"> N/A</option>
+                                                    
+                                                        <option class="form-control" value="0.10"> 0.10</option>
+                                                        <option class="form-control" value="0.15"> 0.15</option>
+                                                        <option class="form-control" value="0.25"> 0.25</option>
+                                                        <option class="form-control" value="0.40"> 0.40</option>
+                                                        <option class="form-control" value="0.65"> 0.65</option>
+                                                        <option class="form-control" value="1.00"> 1.0</option>
+                                                        <option class="form-control" value="1.50"> 1.5</option>
+                                                        <option class="form-control" value="2.50"> 2.5</option>
+                                                        <option class="form-control" value="4.00"> 4.0</option>
+                                                        <option class="form-control" value="6.50"> 6.5</option>
+                                                    </select>
+                                                </th>
+                                                <th>AQL Good Glove
+                                                    <select class="form-control" id="AQL_GG" name="AQL_GG">
+                                                        <option class="form-control" value="N/A"> N/A</option>
+                                     
+                                                        <option class="form-control" value="0.10"> 0.10</option>
+                                                        <option class="form-control" value="0.15"> 0.15</option>
+                                                        <option class="form-control" value="0.25"> 0.25</option>
+                                                        <option class="form-control" value="0.40"> 0.40</option>
+                                                        <option class="form-control" value="0.65"> 0.65</option>
+                                                        <option class="form-control" value="1.00"> 1.0</option>
+                                                        <option class="form-control" value="1.50"> 1.5</option>
+                                                        <option class="form-control" value="2.50"> 2.5</option>
+                                                        <option class="form-control" value="4.00"> 4.0</option>
+                                                        <option class="form-control" value="6.50"> 6.5</option>
+                                                    </select>
+                                                </th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                        <table class="table" style="border: none;" hidden>
+
+            <Tr>
+
+                <Th style="border: none;background: rgb(190, 218, 248);" >Reference G1 (non USA)
+                    <table class="minit">
+                        <tr>
+                            <th>Letter</th>
+                            <th>S.Size</th>
+                            <th>0.10</th>
+                            <th>0.15</th>
+                            <th>0.25</th>
+                            <th>0.40</th>
+                            <th>0.65</th>
+                            <th>1.0</th>
+                            <th>1.5</th>
+                            <th>2.5</th>
+                            <th>4.0</th>
+                            <th>6.5</th>
+                        </tr>
+                        <tr><td>K</td> <td>125</td>  <td>0</td> <td>0</td> <td>1</td> <td>1</td> <td>2</td> <td>3</td> <td>5</td> <td>7</td> <td>10</td> <td>14</td></tr>
+                        <tr><td>L</td> <td>200</td>  <td>0</td> <td>0</td> <td>1</td> <td>2</td> <td>3</td> <td>5</td> <td>7</td> <td>10</td> <td>14</td> <td>21</td></tr>
+                        <tr><td>M</td> <td>315</td>  <td>0</td> <td>1</td> <td>2</td> <td>3</td> <td>5</td> <td>7</td> <td>10</td> <td>14</td> <td>21</td> <td>33</td></tr>
+                        <tr><td>N</td> <td>500</td>  <td>1</td> <td>2</td> <td>3</td> <td>5</td> <td>7</td> <td>10</td> <td>14</td> <td>21</td> <td>33</td> <td>52</td></tr>
+                    </table>
+
+                </Th> 
+
+              <Th style="border: none;background: rgb(149, 248, 238);" >Reference G2 (USA)
+                    <table class="minit">
+
+                        <tr>
+                            <th>Total Pcs/Lot</th>
+                            <th>Letter</th>
+                            <th>Sample</th>
+                            <th>Sample Size</th>
+                            <th>Cumul-ative S.Size</th>
+                            <th>0.10</th>
+                            <th>0.15</th>
+                            <th>0.25</th>
+                            <th>0.40</th>
+                            <th>0.65</th>
+                            <th>1.0</th>
+                            <th>1.5</th>
+                            <th>2.5</th>
+                            <th>4.0</th>
+                            <th>6.5</th>
+                        </tr>
+
+                        <tr>
+                            <th>3201 to 10000 </th>
+                            <td> L</td> <td> First </td> <td> 50</td> <td> 50</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 3</td> <td> 5</td> <td> 7</td>
+                        </tr>
+                        <tr>
+                            <th>3201 to 10000 </th>
+                            <td> L</td> <td> Second </td> <td> 50</td> <td> 100</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 1</td> <td> 2</td> <td> 6</td> <td> 10</td> <td> 14</td>
+                        </tr>
+                        <tr>
+                            <th>10001 to 35000 </th>
+                            <td> M</td> <td> First </td> <td> 80</td> <td> 80</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 5</td> <td> 7</td> <td> 10</td>
+                        </tr>
+                        <tr>
+                            <th>10001 to 35000 </th>
+                            <td> M</td> <td> Second </td> <td> 80</td> <td> 160</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 1</td> <td> 2</td> <td> 3</td> <td> 10</td> <td> 14</td> <td> 20</td>
+                        </tr>
+                        <tr>
+                            <th>35001 to 150000 </th>
+                            <td> N</td> <td> First </td> <td> 125</td> <td> 125</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 0</td> <td> 1</td> <td> 7</td> <td> 10</td> <td> 14</td>
+                        </tr>
+                        <tr>
+                            <th>35001 to 150000 </th>
+                            <td> N</td> <td> Second </td> <td> 125</td> <td> 250</td> <td> 0</td> <td> 0</td> <td> 1</td> <td> 1</td> <td> 1</td> <td> 4</td> <td> 5</td> <td> 14</td> <td> 20</td> <td> 28</td>
+                        </tr>
+                        <tr>
+                            <th>150001 to 500000</th>
+                            <td> P</td> <td> First </td> <td> 200</td> <td> 200</td> <td> 0</td> <td> 0</td> <td> 1</td> <td> 0</td> <td> 0</td> <td> 1</td> <td> 2</td> <td> 10</td> <td> 14</td> <td> 21</td>
+                        </tr>
+                        <tr>
+                            <th>150001 to 500000</th>
+                            <td> P</td> <td> Second </td> <td> 200</td> <td> 400</td> <td> 0</td> <td> 0</td> <td> 2</td> <td> 1</td> <td> 1</td> <td> 5</td> <td> 7</td> <td> 20</td> <td> 28</td> <td> 42</td>
+                        </tr>
+                    </table>
+
+                </Th>
+
+            </Tr>
+
+        </table>
+
+                                    <button type="button" name="generate" class="btn btn-success generate" onclick="getCurrentLot()">Generate
+                                        details</button>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="rowX">
+                    <div class="col-lg-13">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Preset Pallet Details</div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="table-responsive">
+
+                                    <!-- <div class="form-inline"> -->
+
+                                    <span id="error"></span>
+
+
+
+                                  
+
+                                    <table id="item_table" style="border: none;">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2">Size</th>
+                                                <th rowspan="2">SO Item <br> Number</th>
+                                                <th rowspan="2">Lot <br> Count</th>
+                                                <th rowspan="2">Pallet  <br>  Number</th>
+                                                <th colspan="3"> 1. Sampling</th>
+                                                 <th colspan="3"> 2. Sampling</th>
+                                                                                                 <th rowspan="2">Sample Size<br>Visual</th>
+                                                <th rowspan="2">Sample Size<br>APT/WTT</th>
+                                                  <th colspan="6"> Acceptance </th>
+                                            </tr><tr> 
+                                                <th> Ctn /Pallet</th>
+                                                <th> Inner /Ctn</th>
+                                                <th> Pcs /Inner</th>
+                                                <th> Ctn /Pallet</th>
+                                                <th> Inner /Ctn </th>
+                                                <th> Pcs /Inner </th>
+
+                                                <th>Hole</th>
+                                                <th>Critical NFG</th>
+                                                <th>Critical NAG</th>
+                                                <th>Major</th>
+                                                <th>Minor</th>
+                                                <th>GG</th>
+
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+
+                                        </tbody>
+                                    </table>
+
+
+                                    <div align="center">
+                                        <input type="submit" name="submit" class="btn btn-info" value="Insert" hidden>
+                                    </div>
+
+                                    <div id="test">
+
+                                    </div>
+
+                                    <!-- </div> -->
+
+                                </div>
+                                <!-- table-responsive -->
+                            </div>
+                            <!-- panel-body-->
+                        </div>
+                        <!-- panel-primary -->
+                    </div>
+                    <!-- col-lg-13 -->
+
+
+                    <br>
+
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /page-wrapper -->  </div>
+        </div>
+
+    </div>
+
+
+
+
+
+ <script src="presetjs.js"></script>
+
+</body>
+
+</html>
+<!------th><button type="button" name="add" class="btn btn-success btn-sm add"><span class="glyphicon glyphicon-plus"></span></button></th------>
