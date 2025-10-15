@@ -205,6 +205,7 @@ const acceptarray = [
             
 
 
+
 function getCurrentLot() {
   const lotsTable = document.querySelector("#lotsTable tbody");
   const itemTable = document.querySelector("#item_table tbody");
@@ -233,41 +234,13 @@ function getCurrentLot() {
     const totalPallet = parseInt(cells[1].textContent.trim());
     const totalSample = parseInt(cells[4].textContent.trim());
 
-    // --- USA special path ---
-    if (isUSA) {
-      const usaId = `usa_${totalSample}_${totalPallet}`;
-      const usaDef = usasamplingtable.find(u => u.id === usaId);
-
-      if (usaDef) {
-        usaDef.sample.forEach(s => {
-          for (let i = 0; i < s.times; i++) {
-            const cols = [
-              size, soItem, lot, palletCounter++,
-              s.A, s.B, s.C, s.D, s.E, s.F,
-              s.sample, s.sample,
-              0, 0, 0, 0, 0, 0 // AQL placeholders
-            ];
-
-            const tr = document.createElement("tr");
-            cols.forEach(v => {
-              const td = document.createElement("td");
-              td.textContent = v;
-              tr.appendChild(td);
-            });
-            itemTable.appendChild(tr);
-          }
-        });
-        continue; // skip normal path
-      }
-    }
-
-    // --- Non-USA path ---
     const baseSample = Math.floor(totalSample / totalPallet);
     const remainder = totalSample % totalPallet;
     const sampleDistribution = Array.from({ length: totalPallet }, (_, i) =>
       i < remainder ? baseSample + 1 : baseSample
     );
 
+    // --- Acceptance table distribution (common for both) ---
     const acceptKey = selectedAcceptArray.find((x) => parseInt(x.Key) === totalSample);
     const distributeAccept = (value) => {
       if (!value || value === "N/A") return Array(totalPallet).fill(0);
@@ -288,6 +261,41 @@ function getCurrentLot() {
       GG: distributeAccept(AQLSelections.GG),
     };
 
+    // --- USA special case path ---
+    if (isUSA) {
+      const usaId = `usa_${totalSample}_${totalPallet}`;
+      const usaDef = usasamplingtable.find(u => u.id === usaId);
+
+      if (usaDef) {
+        usaDef.sample.forEach((s, idx) => {
+          for (let i = 0; i < s.times; i++) {
+            const palletIndex = idx + i;
+            const cols = [
+              size, soItem, lot, palletCounter++,
+              s.A, s.B, s.C, s.D, s.E, s.F,
+              s.sample, s.sample,
+              accDistributions.holes[palletIndex] ?? 0,
+              accDistributions.NFG[palletIndex] ?? 0,
+              accDistributions.NAG[palletIndex] ?? 0,
+              accDistributions.Major[palletIndex] ?? 0,
+              accDistributions.Minor[palletIndex] ?? 0,
+              accDistributions.GG[palletIndex] ?? 0,
+            ];
+
+            const tr = document.createElement("tr");
+            cols.forEach((v) => {
+              const td = document.createElement("td");
+              td.textContent = v;
+              tr.appendChild(td);
+            });
+            itemTable.appendChild(tr);
+          }
+        });
+        continue;
+      }
+    }
+
+    // --- Non-USA calculation path ---
     const pallets = sampleDistribution.map((sample) => {
       let A, B, C, D, E, F;
       if (sample % 2 === 0) {
@@ -300,7 +308,7 @@ function getCurrentLot() {
       return { A, B, C, D, E, F, sample };
     });
 
-    // Special fixed non-USA rule
+    // Special fixed non-USA case
     if (totalPallet === 2 && totalSample === 200) {
       pallets[0] = { A: 2, B: 1, C: 33, D: 1, E: 1, F: 34, sample: 100 };
       pallets[1] = { A: 2, B: 1, C: 50, D: 0, E: 0, F: 0, sample: 100 };
@@ -333,4 +341,5 @@ function getCurrentLot() {
 ;
 
  changemaxpcs()
+
 
