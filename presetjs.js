@@ -286,6 +286,7 @@ function getCurrentLot() {
             cols.forEach((v) => {
               const td = document.createElement("td");
               td.textContent = v;
+               td.contentEditable =true ;
               tr.appendChild(td);
             });
             itemTable.appendChild(tr);
@@ -331,6 +332,7 @@ function getCurrentLot() {
       cols.forEach((val) => {
         const td = document.createElement("td");
         td.textContent = val;
+          td.contentEditable =true ;
         tr.appendChild(td);
       });
       itemTable.appendChild(tr);
@@ -341,5 +343,6 @@ function getCurrentLot() {
 ;
 
  changemaxpcs()
+
 
 
