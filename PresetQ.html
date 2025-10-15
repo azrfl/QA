@@ -15,24 +15,24 @@
             margin-bottom: 10px;
         }
 
-        .section .inputs {
+       .inputs {
             display: flex;
             flex-wrap: wrap;
             /* allows wrapping to next line */
-            gap: 16px;
+            gap: 16px; margin-bottom: 10px;
             /* spacing between fieldsets */
         }
 
-        .section .inputs fieldset {
+       .inputs fieldset {
             display: inline-block;
-            min-width: 200px;
-            /* adjust width */
+            width: 200px;
+            /* adjust width  border: 1px solid #ccc;*/
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+           background-color: #f2f7fc;
+            border-radius: 4px;box-shadow: 2px 2px 3px #ccc;
         }
 
-        .section .inputs legend {
+       .inputs legend {
             margin-bottom: 0px;
             font-size: 0.9rem;
             padding: 0 6px;
@@ -40,6 +40,7 @@
         }
 
         .section .inputs input {
+             width: 180px;
             display: block;
             margin-top: 6px;
             width: 100%;
@@ -48,8 +49,7 @@
         }
 
 
-        .inputs input {
-            width: 200px;
+        .inputs input ,    .inputs select {
             padding: 6px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -87,6 +87,8 @@
             padding: 1px 1px;
             font-size: 9px;
         }
+
+        #lotsTable {margin-bottom: 10px;}
     </style>
 </head>
 
@@ -103,7 +105,7 @@
             <div class="rowX">
                 <div class="col-lg-13">
                     <h4 class="page-header">QUALITY RECORD E SYSTEM (QREX)</h4>
-                    <h2>PRESET Sampling Calculator Dev</h2>
+                    <h2>PRESET Sampling Calculator Development</h2>
                 </div>
                 <!-- /.col-lg-13 -->
             </div>
@@ -510,7 +512,7 @@
 
                                     <div class="section" id="section-b">
                                       
-                                        <table id="lotsTable" contenteditable="true">
+                                        <table id="lotsTable" >
                                             <thead>
                                                 <tr>
                                                     <th>Lot</th>
@@ -525,15 +527,10 @@
                                         </table>
                                     </div>
 
-
-
-
-                    
-                                    <table class="table" id="AQL_table" style="border: none;">
-                                        <tbody>
-                                            <tr>
-                                                <th>AQL Holes
-                                                    <select class="form-control" id="AQL_holes" name="AQL_holes">
+<div class="inputs" >
+                                            <fieldset>
+                                                <label>AQL Holes</label>
+                                                         <select class="form-control" id="AQL_holes" name="AQL_holes">
                                                         <option class="form-control" value="N/A"> N/A</option>
                                     
                                                         <option class="form-control" value="0.10"> 0.10</option>
@@ -547,9 +544,14 @@
                                                         <option class="form-control" value="4.00"> 4.0</option>
                                                         <option class="form-control" value="6.50"> 6.5</option>
                                                     </select>
-                                                </th>
-                                                <th>AQL NFG
-                                                    <select class="form-control" id="AQL_NFG" name="AQL_NFG">
+                                            </fieldset>
+
+
+
+     <fieldset> <label>AQL NFG
+
+     </label>
+                                 <select class="form-control" id="AQL_NFG" name="AQL_NFG">
                                                         <option class="form-control" value="N/A"> N/A</option>
                                     
                                                         <option class="form-control" value="0.10"> 0.10</option>
@@ -562,10 +564,14 @@
                                                         <option class="form-control" value="2.50"> 2.5</option>
                                                         <option class="form-control" value="4.00"> 4.0</option>
                                                         <option class="form-control" value="6.50"> 6.5</option>
-                                                    </select>
-                                                </th>
-                                                <th>AQL NAG
-                                                    <select class="form-control" id="AQL_NAG" name="AQL_NAG">
+                                                    </select>                    
+     </fieldset>
+
+
+
+     <fieldset> <label>AQL NAG
+
+     </label>                            <select class="form-control" id="AQL_NAG" name="AQL_NAG">
                                                         <option class="form-control" value="N/A"> N/A</option>
                        
                                                         <option class="form-control" value="0.10"> 0.10</option>
@@ -579,9 +585,15 @@
                                                         <option class="form-control" value="4.00"> 4.0</option>
                                                         <option class="form-control" value="6.50"> 6.5</option>
                                                     </select>
-                                                </th>
-                                                <th>AQL Major
-                                                    <select class="form-control" id="AQL_Major" name="AQL_Major">
+                                      
+     </fieldset>
+
+
+
+     <fieldset> <label>AQL Major
+
+     </label>
+                           <select class="form-control" id="AQL_Major" name="AQL_Major">
                                                         <option class="form-control" value="N/A"> N/A</option>
                                 
                                                         <option class="form-control" value="0.10"> 0.10</option>
@@ -594,10 +606,13 @@
                                                         <option class="form-control" value="2.50"> 2.5</option>
                                                         <option class="form-control" value="4.00"> 4.0</option>
                                                         <option class="form-control" value="6.50"> 6.5</option>
-                                                    </select>
-                                                </th>
-                                                <th>AQL Minor
-                                                    <select class="form-control" id="AQL_Minor" name="AQL_Minor">
+                                                    </select>                   
+     </fieldset>
+
+     <fieldset> <label>AQL Minor
+
+     </label>
+                                              <select class="form-control" id="AQL_Minor" name="AQL_Minor">
                                                         <option class="form-control" value="N/A"> N/A</option>
                                                     
                                                         <option class="form-control" value="0.10"> 0.10</option>
@@ -610,10 +625,12 @@
                                                         <option class="form-control" value="2.50"> 2.5</option>
                                                         <option class="form-control" value="4.00"> 4.0</option>
                                                         <option class="form-control" value="6.50"> 6.5</option>
-                                                    </select>
-                                                </th>
-                                                <th>AQL Good Glove
-                                                    <select class="form-control" id="AQL_GG" name="AQL_GG">
+                                                    </select>             
+     </fieldset>
+
+     <fieldset> <label>AQL Good Glove
+
+     </label>                    <select class="form-control" id="AQL_GG" name="AQL_GG">
                                                         <option class="form-control" value="N/A"> N/A</option>
                                      
                                                         <option class="form-control" value="0.10"> 0.10</option>
@@ -627,10 +644,14 @@
                                                         <option class="form-control" value="4.00"> 4.0</option>
                                                         <option class="form-control" value="6.50"> 6.5</option>
                                                     </select>
-                                                </th>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                      
+     </fieldset>
+
+
+     
+
+                    </div>
+                                  
 
                                         <table class="table" style="border: none;" hidden>
 
@@ -826,4 +847,3 @@
 </body>
 
 </html>
-<!------th><button type="button" name="add" class="btn btn-success btn-sm add"><span class="glyphicon glyphicon-plus"></span></button></th------>
