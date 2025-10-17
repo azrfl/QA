@@ -1,0 +1,591 @@
+<!-- File: udi-di-barcode-generator.html -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>UDI-DI Barcode Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fbfcfd; --card:#ffffff; --muted:#6b7280; --accent:#0ea5e9; --shadow:0 6px 18px rgba(16,24,40,0.06);
+    --radius:10px;
+  }
+  *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;}
+  body{margin:5px;background:linear-gradient(180deg,#fbfdff, #ffffff);color:#0f172a;}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  header h1{font-size:16px;font-weight:600;margin:0}
+  header p{margin:0;color:var(--muted);font-size:12px}
+  .container{display:flex;flex-direction:column;gap:18px;max-width:1200px;margin:0 auto}
+  .top{display:flex;gap:10px}
+  .left{flex:1;display:flex;flex-direction:column;gap:10px}
+  label.small{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+  .size-area{display:flex;gap:8px;align-items:flex-start}
+  textarea.size-input{width:60px;height:300px;resize:vertical;padding:5px;border-radius:8px;border:1px solid #e6edf3;background:var(--card);box-shadow:var(--shadow);font-family:monospace}
+  textarea.gtin-input{flex:1;height:300px;width:200px;padding:5px;border-radius:8px;border:1px solid #e6edf3;background:var(--card);box-shadow:var(--shadow);font-family:monospace;resize:vertical}
+  textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(14,165,233,0.08);}
+  .right{width:750px;display:flex;flex-direction:column;gap:12px}
+  .ai-grid{display:flex;flex-wrap:wrap;gap:10px}
+  .card{flex:1 1 160px;min-width:160px;background:var(--card);padding:10px;border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+  .card-header{display:flex;align-items:center;gap:10px}
+  /* styled checkbox */
+  .switch{width:20px;height:20px;border-radius:6px;border:2px solid #cbd5e1;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:white}
+  .switch input{display:none}
+  .switch.on{background:linear-gradient(90deg,#0ea5e9,#3b82f6);border-color:transparent;color:white}
+  .switch svg{width:12px;height:12px;opacity:0}
+  .switch.on svg{opacity:1}
+  .ai-label{font-size:13px;font-weight:600}
+  .ai-sub{font-size:12px;color:var(--muted)}
+  .ai-input{padding:8px;border-radius:8px;border:1px solid #e6edf3;background:#fbfdff;font-size:13px}
+  .ai-input:disabled{opacity:0.55;background:#f8fafc}
+  .btnbar{display:flex;gap:10px;align-items:center}
+  .gen-btn{padding:8px 12px;border-radius:10px;border:none;background:#0f172a;color:white;font-weight:600;cursor:pointer;box-shadow:var(--shadow)}
+  .gen-btn.secondary{background:transparent;color:#0f172a;border:1px solid #e6edf3;font-weight:600}
+  .output-wrap{display:flex;flex-direction:column;gap:8px}
+  .output-text{min-height:160px;padding:12px;border-radius:10px;border:1px solid #e6edf3;background:var(--card);font-family:monospace;resize:vertical}
+  .output-actions{display:flex;justify-content:flex-end;gap:8px;align-items:center}
+  .copy-btn{display:inline-flex;align-items:center;gap:8px;padding:8px;border-radius:8px;border:1px solid #e6edf3;background:var(--card);cursor:pointer}
+  .small-muted{font-size:12px;color:var(--muted)}
+  footer{margin-top:6px;font-size:12px;color:var(--muted)}
+  @media (max-width:960px){
+    .top{flex-direction:column}
+    .right{width:100%}
+  }
+  .sequence-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  background: #f9fafb;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.ai-pill {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: grab;
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.ai-pill.fixed {
+  background: #e5e7eb;
+  color: #4b5563;
+  cursor: default;
+}
+.ai-pill.dragging {
+  opacity: 0.6;
+}
+
+.card.active {
+  border: 1.5px solid #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.1);
+}
+
+</style>
+</head>
+<body>
+  <div class="container">
+    <header> <img src="TGLOGO.png" alt="" srcset="" style="width: 100px;">
+      <div>
+        <h1>UDI-DI Barcode Text Generator </h1>
+        <p class="small-muted">Paste Sizes & GTINs, tick AIs and generate styles A–D</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="top">
+        <div class="left">
+          <div>
+            <label class="small">Paste/Key in SIZE & GTIN : </label>
+            <div class="size-area">
+              <textarea id="sizes" class="size-input" placeholder="e.g. 5.0 5.5 6.0 XS"></textarea>
+              <textarea id="gtins" class="gtin-input" placeholder="Paste GTINs (one per line). Tabs/spaces allowed"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <aside class="right">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:600">AIs (toggle to include)</div>
+            <div style="font-size:12px;color:var(--muted)">Unchecked → input disabled</div>
+          </div>
+
+  <div class="ai-grid" id="aiGrid">
+  <div class="card" data-ai="01" data-type="number" style="display: none;">
+    <div class="card-header">
+      <label class="switch" tabindex="0"><input type="checkbox" class="ai-checkbox" checked><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label>
+      <div style="flex:1">
+<div class="ai-label">(01) GTIN</div><div class="ai-sub">14-digit</div></div>
+    </div>
+    <input class="ai-input" type="text" placeholder="GTIN (auto used)" disabled />
+  </div>
+
+  <div class="card" data-ai="17" data-type="date">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox" checked><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(17) Expiry Date</div></div></div>
+    <input class="ai-input" type="date" />
+  </div>
+
+
+  <div class="card" data-ai="11" data-type="date">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(11) Production Date</div></div></div>
+    <input class="ai-input" type="date" disabled />
+  </div>
+
+    <div class="card" data-ai="10" data-type="text">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox" checked><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(10) Batch / Lot</div></div></div>
+    <input class="ai-input" type="text" placeholder="Batch or Lot" />
+  </div>
+
+
+
+  <div class="card" data-ai="13" data-type="date">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(13) Packaging Date</div></div></div>
+    <input class="ai-input" type="date" disabled />
+  </div>
+
+  <div class="card" data-ai="15" data-type="date" style="display: none;">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(15) Best Before Date</div></div></div>
+    <input class="ai-input" type="date" disabled />
+  </div>
+
+
+  <div class="card" data-ai="20" data-type="text">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(20) Variant</div></div></div>
+    <input class="ai-input" type="text" disabled />
+  </div>
+
+  <div class="card" data-ai="21" data-type="text">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox" checked><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(21) Serial Number</div></div></div>
+    <input class="ai-input" type="text" />
+  </div>
+
+  <div class="card" data-ai="30" data-type="number">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(30) Count</div></div></div>
+    <input class="ai-input" type="number" disabled />
+  </div>
+
+  <div class="card" data-ai="37" data-type="number">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(37) Quantity</div></div></div>
+    <input class="ai-input" type="number" disabled />
+  </div>
+
+  <div class="card" data-ai="240" data-type="text">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(240) Additional Product ID</div></div></div>
+    <input class="ai-input" type="text" disabled />
+  </div>
+
+  <div class="card" data-ai="241" data-type="text">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(241) Customer Part Number</div></div></div>
+    <input class="ai-input" type="text" disabled />
+  </div>
+
+  <div class="card" data-ai="250" data-type="text" >
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(250) Secondary Serial</div></div></div>
+    <input class="ai-input" type="text" disabled />
+  </div>
+
+  <div class="card" data-ai="251" data-type="text" style="display: none;">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(251) Source Entity</div></div></div>
+    <input class="ai-input" type="text" disabled />
+  </div>
+
+  <div class="card" data-ai="422" data-type="text" >
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(422) Country of Origin</div></div></div>
+    <input class="ai-input" type="text" placeholder="e.g., US" disabled />
+  </div>
+
+  <div class="card" data-ai="423" data-type="text" style="display: none;">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(423) Country Subdivision</div></div></div>
+    <input class="ai-input" type="text" disabled />
+  </div>
+
+  <div class="card" data-ai="7001" data-type="text" style="display: none;">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(7001) NSN</div></div></div>
+    <input class="ai-input" type="text" disabled />
+  </div>
+
+  <div class="card" data-ai="8005" data-type="number" style="display: none;">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(8005) Price per Unit</div></div></div>
+    <input class="ai-input" type="number" step="0.01" disabled />
+  </div>
+
+  <div class="card" data-ai="8010" data-type="text" style="display: none;">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(8010) CPID</div></div></div>
+    <input class="ai-input" type="text" disabled />
+  </div>
+
+  <div class="card" data-ai="8011" data-type="text" style="display: none;">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(8011) CPID Serial</div></div></div>
+    <input class="ai-input" type="text" disabled />
+  </div>
+
+  <div class="card" data-ai="8200" data-type="text" style="display: none;">
+    <div class="card-header"><label class="switch"><input type="checkbox" class="ai-checkbox"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label><div style="flex:1">
+<div class="ai-label">(8200) Internal Info</div></div></div>
+    <input class="ai-input" type="text" disabled />
+  </div>
+</div>
+        </aside>
+      </section>
+
+      <section class="bottom">
+
+
+        <div class="btnbar">
+
+
+ <div class="small-muted">Arrange sequence (drag&drop):</div>
+        <div class="sequence-bar" id="sequenceBar">
+  <div class="ai-pill fixed" data-ai="01">(01)</div>
+</div>
+
+          <div class="small-muted">Generate :</div>
+          <button class="gen-btn" data-style="A">Style A</button>
+          <button class="gen-btn" data-style="B">Style B</button>
+          <button class="gen-btn" data-style="C">Style C</button>
+          <button class="gen-btn" data-style="D">Style D</button>
+          <button class="gen-btn secondary" id="genAll">Generate All</button>
+        </div>
+
+        <div class="output-wrap">
+          <label class="small">Output :</label>
+          <textarea id="output" class="output-text" placeholder="Generated lines appear here , you may edit after generate" ></textarea>
+          <div class="output-actions">
+            <div class="small-muted" id="status">Ready</div>
+            <button class="copy-btn" id="copyBtn" title="Copy output"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:0.9"><path d="M16 21H8a2 2 0 0 1-2-2V7" stroke="#111827" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="8" y="3" width="13" height="13" rx="2" stroke="#111827" stroke-width="1.6"/></svg>Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+       DOP 16102025 azraful@topglove.com.my ©TG QAPMQC & QA Software & System (QASS)
+      </footer>
+    </main>
+  </div>
+
+<script>
+
+
+
+
+
+/* Minimal inline JS. Keep helpers concise. */
+/* Utility: trim spaces/tabs for size lines */
+function parseSizes(raw){
+  return raw.split(/\r?\n/).map(s => s.replace(/[ \t]+/g,'').trim()).filter(Boolean);
+}
+/* Utility: parse GTIN lines -> keep only digits per line; pad to 14 */
+function parseGTINs(raw){
+  return raw.split(/\r?\n/).map(l=>{
+    const digits = (l.match(/\d+/g)||[]).join('');
+    return digits ? digits.padStart(14,'0') : null;
+  }).filter(Boolean);
+}
+/* Convert date input (yyyy-mm-dd) to YYMMDD */
+function dateToYYMMDD(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  const y = String(d.getFullYear()).slice(-2);
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return y + m + day;
+}
+
+/* Build AI list from cards */
+/* Build AI list from cards — follow drag order from sequence bar */
+function collectAIs(){
+  const order = getAISequence(); // 🟦 get sequence from drag bar
+  const ais = [];
+  for(const ai of order){
+    const card = document.querySelector(`.card[data-ai="${ai}"]`);
+    if(!card) continue;
+    const type = card.dataset.type || 'text';
+    const checkbox = card.querySelector('.ai-checkbox');
+    const input = card.querySelector('.ai-input');
+    if(!checkbox.checked) continue;
+
+    let val = input.value ?? '';
+    if(!val) continue;
+    if(type === 'date') val = dateToYYMMDD(val);
+    val = String(val).replace(/[\r\n]+/g,'').trim();
+    if(!val) continue;
+
+    ais.push({ai, raw: val});
+  }
+  return ais;
+}
+
+/* Generate single line per rules */
+function generateLine(style, size, gtin, ais){
+  // base GTIN with AI (01)
+  const ai01 = style.includes('noParens') ? '01' + gtin : '(01)'+gtin;
+  let parts = [ai01];
+  for(const a of ais){
+    const code = a.ai;
+    const val = a.raw;
+    if(style.includes('noParens')){
+      parts.push(code + val);
+    } else {
+      parts.push('('+code+')' + val);
+    }
+  }
+  const body = parts.join('');
+  if(style.startsWith('A')){ // Style A: size = (01)... with parens
+    return `${size} = ${body}`;
+  } else if(style.startsWith('B')){ // Style B: size = 01... no parens
+    return `${size} = ${body}`;
+  } else if(style.startsWith('C')){ // Style C: no size, with parens
+    return `${body}`;
+  } else { // D: no size, no parens
+    return `${body}`;
+  }
+}
+
+/* Map style id to behaviour: parentheses vs not, and include-size vs not */
+function styleConfig(styleId){
+  if(styleId === 'A') return {startsWith:'A', noParens:false};
+  if(styleId === 'B') return {startsWith:'B', noParens:true};
+  if(styleId === 'C') return {startsWith:'C', noParens:false};
+  if(styleId === 'D') return {startsWith:'D', noParens:true};
+  return {startsWith:styleId, noParens:false};
+}
+
+/* Main generate */
+function generate(styleId){
+  const sizes = parseSizes(document.getElementById('sizes').value);
+  const gtins = parseGTINs(document.getElementById('gtins').value);
+  const ais = collectAIs(); // only checked + with input
+  if(ais.length === 0 && !confirm('No AIs selected with values. Continue generating with only (01) GTIN?')) {
+    return;
+  }
+  if(sizes.length === 0 || gtins.length === 0){
+    alert('Please supply at least one Size and one GTIN.');
+    return;
+  }
+  const cfg = styleConfig(styleId);
+  const styleKey = cfg.startsWith;
+  // attach noParens flag in style string for generateLine
+  const styleFlag = cfg.noParens ? styleKey + '-noParens' : styleKey;
+  // Pair by index up to min length
+  const n = Math.min(sizes.length, gtins.length);
+  const out = [];
+  for(let i=0;i<n;i++){
+    const s = sizes[i];
+    const g = gtins[i];
+    // build parts: we want generateLine to know parentheses or not; set style string accordingly
+    const styleStr = styleKey + (cfg.noParens ? '-noParens' : '');
+    // generateLine uses style string to decide. We'll pass a wrapper that includes 'noParens' substring
+    const result = generateLine(styleStr, s, g, ais.map(a=> ({ai:a.ai, raw:a.raw})).map(x=>x));
+    // But generateLine expects style includes 'noParens' for behavior; ensure correct
+    // fix: if cfg.noParens true, styleStr includes 'noParens'
+    // add to output
+    out.push(result);
+  }
+  const text = out.join('\n');
+  document.getElementById('output').value = text;
+  document.getElementById('status').textContent = `Generated ${out.length} lines (Style ${styleId})`;
+}
+
+/* Event wiring */
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.gen-btn');
+  if(btn && btn.dataset.style){
+    generate(btn.dataset.style);
+  }
+  if(e.target.id === 'genAll' || e.target.closest && e.target.closest('#genAll')){
+    // Generate all styles, concat with headings
+    const styles = ['A','B','C','D'];
+    const full = [];
+    for(const s of styles){
+      // call generate but capture result by reusing logic: duplicate parsing
+      const sizes = parseSizes(document.getElementById('sizes').value);
+      const gtins = parseGTINs(document.getElementById('gtins').value);
+      const ais = collectAIs();
+      if(sizes.length ===0 || gtins.length===0) { alert('Please supply at least one Size and one GTIN.'); return; }
+      const n = Math.min(sizes.length, gtins.length);
+      full.push(`--- Style ${s} ---`);
+      for(let i=0;i<n;i++){
+        const cfg = styleConfig(s);
+        const styleStr = s + (cfg.noParens ? '-noParens' : '');
+        full.push(generateLine(styleStr, sizes[i], gtins[i], ais));
+      }
+    }
+    document.getElementById('output').value = full.join('\n');
+    document.getElementById('status').textContent = `Generated ${full.length} lines (All styles)`;
+  }
+});
+
+/* Copy */
+document.getElementById('copyBtn').addEventListener('click', async ()=>{
+  const txt = document.getElementById('output').value;
+  if(!txt) return alert('Nothing to copy.');
+  try{
+    await navigator.clipboard.writeText(txt);
+    document.getElementById('status').textContent = 'Copied to clipboard';
+  }catch(e){
+    // fallback
+    document.getElementById('output').select();
+    document.execCommand('copy');
+    document.getElementById('status').textContent = 'Copied (fallback)';
+  }
+});
+
+/* Checkbox UI toggles inputs and visual */
+document.querySelectorAll('.card').forEach(card=>{
+  const cb = card.querySelector('.ai-checkbox');
+  const input = card.querySelector('.ai-input');
+  const sw = card.querySelector('.switch');
+  function setState(){
+    if(cb.checked){
+      sw.classList.add('on');
+      input.disabled = false;
+    } else {
+      sw.classList.remove('on');
+      input.disabled = true;
+    }
+  }
+  // initialize
+  setState();
+  cb.addEventListener('change', setState);
+  // allow clicking the switch container to toggle
+  sw.addEventListener('click', ()=>{
+    cb.checked = !cb.checked;
+    cb.dispatchEvent(new Event('change'));
+  });
+  // keyboard accessible toggle on Enter/Space
+  sw.addEventListener('keydown', (ev)=>{
+    if(ev.key === 'Enter' || ev.key === ' '){
+      ev.preventDefault();
+      cb.checked = !cb.checked;
+      cb.dispatchEvent(new Event('change'));
+    }
+  });
+});
+
+/* Small enhancement: when user types GTIN with tab-separated digits we keep digits; also allow paste cleaning on paste */
+document.getElementById('gtins').addEventListener('paste', (ev)=>{
+  // let the paste happen then clean in next tick
+  setTimeout(()=> {
+    const cleaned = parseGTINs(document.getElementById('gtins').value).join('\n');
+    if(cleaned) document.getElementById('gtins').value = cleaned;
+  }, 50);
+});
+document.getElementById('sizes').addEventListener('paste', (ev)=>{
+  setTimeout(()=> {
+    const cleaned = parseSizes(document.getElementById('sizes').value).join('\n');
+    if(cleaned) document.getElementById('sizes').value = cleaned;
+  }, 50);
+});
+
+/* Keep behaviour of generateLine strictly to style flags: modify generateLine to interpret '-noParens' */
+(function patchGenerateLine(){
+  const orig = generateLine;
+  window.generateLine = function(style, size, gtin, ais){
+    const noParens = typeof style === 'string' && style.includes('noParens');
+    const sKey = (typeof style === 'string' ? style[0] : 'A');
+    const ai01 = noParens ? '01' + gtin : '(01)'+gtin;
+    const parts = [ai01];
+    for(const a of ais){
+      const code = a.ai;
+      const val = a.raw;
+      parts.push(noParens ? (code + val) : ('('+code+')' + val));
+    }
+    const body = parts.join('');
+    if(sKey === 'A' || sKey === 'B'){
+      return `${size} = ${body}`;
+    } else {
+      return `${body}`;
+    }
+  };
+})();
+
+const sequenceBar = document.getElementById('sequenceBar');
+const aiCheckboxes = document.querySelectorAll('.ai-checkbox');
+
+// --- build or rebuild the sequence bar ---
+function updateSequenceBar() {
+  // keep (01) fixed
+  sequenceBar.querySelectorAll('.ai-pill:not(.fixed)').forEach(e => e.remove());
+  const checkedAIs = Array.from(document.querySelectorAll('.ai-checkbox:checked'))
+    .map(cb => cb.closest('.card').dataset.ai)
+    .filter(ai => ai !== '01');
+  checkedAIs.forEach(ai => {
+    const pill = document.createElement('div');
+    pill.className = 'ai-pill';
+    pill.textContent = `(${ai})`;
+    pill.draggable = true;
+    pill.dataset.ai = ai;
+    addDragEvents(pill);
+    sequenceBar.appendChild(pill);
+  });
+}
+
+// --- handle drag behavior ---
+let dragSrc = null;
+function addDragEvents(pill) {
+  pill.addEventListener('dragstart', e => {
+    dragSrc = pill;
+    pill.classList.add('dragging');
+  });
+  pill.addEventListener('dragend', e => {
+    pill.classList.remove('dragging');
+    dragSrc = null;
+  });
+  pill.addEventListener('dragover', e => {
+    e.preventDefault();
+    const target = e.target.closest('.ai-pill');
+    if (target && target !== dragSrc && !target.classList.contains('fixed')) {
+      const rect = target.getBoundingClientRect();
+      const before = e.clientX < rect.left + rect.width / 2;
+      sequenceBar.insertBefore(dragSrc, before ? target : target.nextSibling);
+    }
+  });
+}
+
+// --- get final AI order (used by generator) ---
+function getAISequence() {
+  return Array.from(sequenceBar.querySelectorAll('.ai-pill'))
+    .map(p => p.dataset.ai);
+}
+
+// --- listen for checkbox change to rebuild ---
+aiCheckboxes.forEach(cb => cb.addEventListener('change', updateSequenceBar));
+
+// initial render
+updateSequenceBar();
+
+
+
+
+
+</script>
+
+
+</body>
+</html>
