@@ -340,11 +340,23 @@ function collectAIs(){
     const input = card.querySelector('.ai-input');
     if(!checkbox.checked) continue;
 
-    let val = input.value ?? '';
-    if(!val) continue;
-    if(type === 'date') val = dateToYYMMDD(val);
-    val = String(val).replace(/[\r\n]+/g,'').trim();
-    if(!val) continue;
+    //let val = input.value ?? '';
+    //if(!val) continue;
+   //if(type === 'date') val = dateToYYMMDD(val);
+   //val = String(val).replace(/[\r\n]+/g,'').trim();
+   //if(!val) continue;
+let val = input.value ?? '';
+
+if(type === 'date'){
+  const converted = dateToYYMMDD(val);
+  val = converted || 'YYMMDD';  // placeholder if blank
+} else {
+  if(!val) continue;  // skip non-date AIs if empty
+}
+
+val = String(val).replace(/[\r\n]+/g,'').trim();
+if(!val) continue;
+
 
     ais.push({ai, raw: val});
   }
@@ -599,4 +611,5 @@ updateSequenceBar();
 
 </body>
 </html>
+
 
