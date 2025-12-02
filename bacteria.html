@@ -33,7 +33,7 @@
   </div>
 
     <div class="section">
-    <label>Result A: Sample Result value</label>
+    <label>Result A: Sample Result value</label><br>
     <input type="number" id="resultA" />
     
   </div>
@@ -49,7 +49,7 @@
   </div>
 
   <div class="section">
-    <label>Result B : Sample Result  for Boiled/Sterile Water value</label>
+    <label>Result B : Sample Result  for Boiled/Sterile Water value</label><br>
     <input type="number" id="resultB" />
     
   </div>
@@ -202,7 +202,7 @@
     try {
       statusDiv.textContent = "Uploading...";
 
-      const response = await fetch("https://script.google.com/macros/s/AKfycbwf2vGAKfOXiwh0mK42OYt50xhGLjSYuDlln1JnRccj9pFCgupKTMhnjEFHKcB9iXnUaA/exec", {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbwrQavg7yWgWXp_xdb0KVQgajcOrJARl4xvTTfrQIqOUxX8T1Jyru6W8jIrnE3qeFv1yA/exec", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -223,6 +223,7 @@
 
 </body>
 </html>
+
 
 
 
