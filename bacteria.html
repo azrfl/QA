@@ -202,8 +202,8 @@
     try {
       statusDiv.textContent = "Uploading...";
 
-      const response = await fetch("https://script.google.com/macros/s/AKfycbyl00omo9H6-6nnmKD7hSLY5A7RP_JZOL1A2JbR696ph0Jeq5LYfDCDse6DwIRhosbO/exec", {
-        method: "POST",
+      const response = await fetch("https://script.google.com/macros/s/AKfycbx3c5aoE-zdaxYtBX9qceMKp557n-7mWPbl3YyfB8x2HvpFXWBSkW5YgqR2KhcKtlpz/exec", {
+        method: "GET",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
@@ -223,6 +223,7 @@
 
 </body>
 </html>
+
 
 
 
