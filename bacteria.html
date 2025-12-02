@@ -7,8 +7,8 @@
   <link href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet" />
   <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; margin: 30px auto; max-width: 400px;width:calc(100vw - 20px) }
-    input[type="text"], input[type="file"] { width:300px; margin: 6px 0; padding: 6px; border:1px solid #ccc ; border-radius:5px}
+   body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial; margin: 20px auto; max-width:calc(100vw - 50px)  ;width:300px;font-size:10px}
+    input[type="text"], input[type="file"] { width:200px; margin: 6px 0; padding: 6px; border:1px solid #ccc ; border-radius:5px}
     select , input[type="number"]  { width:100px; padding: 6px; border:1px solid #ccc ; border-radius:5px}
     button { padding: 10px 15px; background: #0078D7; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 8px; }
     button:disabled { background: #999; cursor: not-allowed; }
@@ -16,13 +16,67 @@
     img { max-width: 95%; margin-top: 8px; display: none; box-shadow:2px 2px 15px #ccc}
     #status { margin-top: 15px; font-size: 14px; }
     #resetBtn { display: none; background: #e81123; }
+ 
   </style>
+
+
+
 </head>
 <body>
- <h2>Bacteria Test Result Recording</h2>
+ <img src="limshead.png" style="display:inline-block;height:50px"> 
+ <h3>Bacteria Test Result Recording</h3>
 
-  <label>Ref ID /  Sample ID:</label>
+  <label>Ref ID:</label>
   <input id="filenameInput" type="text" placeholder="Ref ID" /><br>
+    <label>TAC Nu.:</label>
+    <input id="tac" type="text" placeholder="TAC" onchange="validate()" /><br>
+
+
+<div id="msg"></div>
+
+<script>
+  // Convert number → 6-digit uppercase hex
+  function toHex6(num) {
+    return (num >>> 0)
+      .toString(16)
+      .toUpperCase()
+      .padStart(6, "0");
+  }
+
+
+  function calculate(n) {
+  const coreValue = (n * 861107595687) / 7077;
+  const roundedValue = Math.round(coreValue);
+  const roundedString = String(roundedValue);
+  const result = roundedString.slice(-7);
+  return result;
+}
+
+  function validate() {
+    const msg = document.getElementById("msg");
+    const num = parseInt(document.getElementById("filenameInput").value, 10);
+    const key = document.getElementById("tac").value.trim().toUpperCase();
+    const curtain = document.getElementById("cover");
+
+    if (isNaN(num)) {
+      msg.innerHTML = "Invalid number";
+      return;
+    }
+
+    const output = calculate(num)
+
+    const hex = toHex6(output);
+
+    msg.innerHTML = (hex === key)
+      ? "Good"
+      : "TAC is wrong";
+    curtain.style.display = (hex === key)
+    ? "block"
+    : "none";
+  }
+</script>
+
+<div id="cover" style="display:none" >
 <label id="filenameMsg" style="font-size:13px;display:block;margin-top:4px;"></label>
 
   <div class="section">
@@ -68,6 +122,7 @@
   <button id="uploadBtn" disabled>Upload / Submit</button>
   <button id="resetBtn">Reset Form</button>
   <div id="status"></div>
+</div>
 
 <script>
   const filenameInput = document.getElementById("filenameInput");
