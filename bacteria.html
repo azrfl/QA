@@ -25,15 +25,13 @@
 <body>
  <img src="limshead.png" style="display:inline-block;height:50px"> 
  <h3>Bacteria Test Result Recording</h3>
+<table>
+<tr><td> <label>Ref ID:</label></td><td> <input id="filenameInput" type="number" placeholder="Ref ID" /></td></tr>
 
-  <label>Ref ID:</label>
-  <input id="filenameInput" type="text" placeholder="Ref ID" /><br>
-    <label>TAC Nu.:</label>
-    <input id="tac" type="text" placeholder="TAC" onchange="validate()" /><br>
-
-
-<div id="msg"></div>
-
+<tr><td>  <label>TAC Nu.:</label></td><td> <input id="tac" type="number" placeholder="TAC" onchange="validate()" /></td></tr>
+  <tr><td></td><td><div id="msg"></div></td></tr>
+</table>
+   <br>
 <script>
   // Convert number → 6-digit uppercase hex
   function toHex6(num) {
@@ -48,7 +46,7 @@
   const coreValue = (n * 861107595687) / 7077;
   const roundedValue = Math.round(coreValue);
   const roundedString = String(roundedValue);
-  const result = roundedString.slice(-7);
+  const result = roundedString.slice(-6);
   return result;
 }
 
@@ -65,12 +63,12 @@
 
     const output = calculate(num)
 
-    const hex = toHex6(output);
+    //const hex = //toHex6(output);
 
-    msg.innerHTML = (hex === key)
+    msg.innerHTML = (output === key)
       ? "Good"
       : "TAC is wrong";
-    curtain.style.display = (hex === key)
+    curtain.style.display = (output === key)
     ? "block"
     : "none";
   }
@@ -276,6 +274,7 @@
 
 </body>
 </html>
+
 
 
 
