@@ -208,6 +208,7 @@ function api(cmd, data, cb) {
 let lastRecords = [];
 
 function loadRecords() {
+    // Stop existing timers
     timers.forEach(id => clearInterval(id));
     timers = [];
 
@@ -220,12 +221,29 @@ function loadRecords() {
     }
 
     api("loadRecords", { factory: fac, date: date, withDilution: 3, user: "" }, rec => {
+
+        // Ensure array
         lastRecords = Array.isArray(rec) ? rec : [];
+
+        // If empty → handleEmpty()
+        if (lastRecords.length === 0) {
+            handleEmpty();
+            return;
+        }
+
+        // Otherwise render normally
         renderCards();
         applyPendingFilter();
     });
 }
-
+function handleEmpty() {
+    const container = document.getElementById("cards");
+    container.innerHTML = `
+        <div class="emptyBox">
+            <p>No records found for this Factory & Date.</p>
+        </div>
+    `;
+}
 /* ----------- RENDER CARDS -------------- */
 function renderCards() {
     const container = document.getElementById("cards");
@@ -601,6 +619,7 @@ function selectId(refId, idx ,dilute) {
 
 </body>
 </html>
+
 
 
 
