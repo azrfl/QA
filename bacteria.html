@@ -1,80 +1,405 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
+
   <title>Lims:Bacteria Upload </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet" />
   <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
   <style>
-   body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial; margin: 20px auto; max-width:calc(100vw - 50px)  ;width:300px;font-size:10px}
+
+    .hero {
+    width: 100%;
+    height: 27px;
+    background-image: url(nodes.gif);
+    background-size: cover;
+    background-position: center;
+    vertical-align: text-top;
+    text-align: left;
+    font-weight: bold;
+    border-radius: 1px;
+    justify-content: center;
+    color: #003479;
+    text-shadow:1px 1px 8px #fff;
+position:sticky; top:0; z-index:10;
+    font-size: 27px;
+ padding-left:8px;padding-bottom:2px;
+    box-shadow: inset 1px 1px 100px #22579ccc;
+}
+
+
+   body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial; margin: 20px auto; max-width:calc(100vw - 50px)  ;width:300px;font-size:10px ;background:#f5f5f5;}
     input[type="text"], input[type="file"] { width:200px; margin: 6px 0; padding: 6px; border:1px solid #ccc ; border-radius:5px}
-    select , input[type="number"]  { width:100px; padding: 6px; border:1px solid #ccc ; border-radius:5px}
-    button { padding: 10px 15px; background: #0078D7; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 8px; }
+    input[type="number"]  { width:100px; padding: 6px; border:1px solid #ccc ; border-radius:5px}
+    button { padding: 10px 15px; background: #0078D7; color: white; border: none; border-radius: 6px; cursor: pointer;  }
     button:disabled { background: #999; cursor: not-allowed; }
     .section {margin-top: 15px; border-radius: 8px; }
     img { max-width: 95%; margin-top: 8px; display: none; box-shadow:2px 2px 15px #ccc}
     #status { margin-top: 15px; font-size: 14px; }
     #resetBtn { display: none; background: #e81123; }
- 
-  </style>
+    select{width:80px}
+    h2 { text-align:center; margin:10px 0; }
+    .filter-box {
+        padding:12px; background:white; display:flex; flex-direction:column; gap:10px;
+         box-shadow:0 1px 5px rgba(0,0,0,0.08);
+    }
+    select , input[type="date"] { font-size:12px; padding:8px 6px; border-radius:8px; border:1px solid #ccc;}
 
+    #cards { margin-top:10px;display:flex; flex-direction:column; gap:10px; }
 
-
-</head>
-<body>
- <img src="limshead.png" style="display:inline-block;height:50px"> 
- <h3>Bacteria Test Result Recording</h3>
-<table>
-<tr><td> <label>Ref ID:</label></td><td> <input id="filenameInput" type="number" placeholder="Ref ID" /></td></tr>
-
-<tr><td>  <label>TAC Nu.:</label></td><td> <input id="tac" type="number" placeholder="TAC" onchange="validate()" /></td></tr>
-  <tr><td></td><td><div id="msg"></div></td></tr>
-</table>
-   <br>
-<script>
-  // Convert number → 6-digit uppercase hex
-  function toHex6(num) {
-    return (num >>> 0)
-      .toString(16)
-      .toUpperCase()
-      .padStart(6, "0");
-  }
-
-
-  function calculate(n) {
-  const coreValue = (n * 861107595687) / 7077;
-  const roundedValue = Math.round(coreValue);
-  const roundedString = String(roundedValue);
-  const result = roundedString.slice(-6);
-  return result;
-}
-
-  function validate() {
-    const msg = document.getElementById("msg");
-    const num = parseInt(document.getElementById("filenameInput").value, 10);
-    const key = document.getElementById("tac").value.trim().toUpperCase();
-    const curtain = document.getElementById("cover");
-
-    if (isNaN(num)) {
-      msg.innerHTML = "Invalid number";
-      return;
+    .card {
+        padding:12px; border-radius:12px; box-shadow:0 3px 8px rgba(0,0,0,0.08);
+        background:white;width:calc(100% - 15px)
     }
 
-    const output = calculate(num)
+    .dispo-bar { height:6px; border-radius:6px; margin-bottom:8px; }
+    .bar-blank { background:#ffee00; }
+    .bar-pass  { background:#3afa00; }
+    .bar-fail  { background:#f80202; }
 
-    //const hex = //toHex6(output);
+    .row1,.row2,.row3 { font-size:10px; margin-bottom:8px; color:#111; }
+    .clock { font-size:25px; font-weight:800; color:#111; display:block; margin-top:6px; }
 
-    msg.innerHTML = (output === key)
-      ? "Good"
-      : "TAC is wrong";
-    curtain.style.display = (output === key)
-    ? "block"
-    : "none";
-  }
+    .btn-up {
+        width:100%; margin-top:6px; padding:5px; font-size:14px;
+        border-radius:5px; border:none; background:#3c97ffdc; color:white; font-weight:700;
+    }
+  #btnLoad{font-size:22px ;padding:2px 10px}
+    @media (min-width:300px){
+        .card{max-width:300px;margin:0 auto;}
+        .filter-box{max-width:420px;margin:0 auto;}
+    }
+   #cover {padding:5px ;background-color: #fff;box-shadow:0 3px 8px rgba(0,0,0,0.08);border-radius:3px;margin-top:10px}
+</style>
+</head>
+<body>
+
+
+<div class="hero">  <img src="TGLOGO.png" style="display:inline-block;height:25px;margin:0px">  LIMS  </div>
+
+
+ <h3>Bacteria Test Result Recording</h3>
+
+<div class="filter-box">
+
+
+    <table>
+
+<tr> <td>  <label>Factory:</label> </td>
+<td>   <label>Date:</label></td>
+<td>   <label>Load:</label></td></tr>
+<tr> <td> <select id="factory">
+        <option value="">?</option>
+        <option value="F11">F11</option>
+        <option value="F12">F12</option>
+        <option value="F13">F13</option>
+        <option value="F14">F14</option>
+    </select>
+</td>
+<td><input type="date" id="fdate"></td>
+<td>    <button id="btnLoad">⟳</button></td>
+
+    </table>
+
+  
+   
+ 
+    
+
+
+
+    <label style="font-size:15px; display:flex; gap:8px; align-items:center;">
+        <input type="checkbox" id="chkPending" checked>
+        Pending Only
+    </label>
+</div>
+
+<div id="cards" aria-live="polite">
+
+
+    
+</div>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+
+    const fac = params.get("Fac");   // Example: F13
+    const date = params.get("date"); // Example: 08122025 (ddmmyyyy)
+
+    const factorySelect = document.getElementById("factory");
+    const dateInput = document.getElementById("fdate");
+
+    let shouldCallLoad = false;
+
+    // ----- FACTORY -----
+    if (fac) {
+        factorySelect.value = fac;
+        shouldCallLoad = true; // only call when Fac exists
+    }
+
+    // ----- DATE -----
+    let finalDate = "";
+
+    if (date) {
+        // Convert ddmmyyyy → yyyy-mm-dd
+        const dd = date.substring(0, 2);
+        const mm = date.substring(2, 4);
+        const yyyy = date.substring(4, 8);
+        finalDate = `${yyyy}-${mm}-${dd}`;
+    } else {
+        // Always set today's date, even if no params
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        finalDate = `${yyyy}-${mm}-${dd}`;
+    }
+
+    dateInput.value = finalDate;
+
+    // ----- AUTO CALL -----
+    if (shouldCallLoad) {
+        loadRecords();
+    }
+});
+
+
+/* ----------- CONFIG -------------- */
+const GS_URL = "https://script.google.com/macros/s/AKfycbz0QJYvOJwCCTc47a6_Ou_zwIUg-y5WTyAAVFuS28Hq5idSBIntcDgs4S_Kr8P7U_1x/exec";
+
+/* ----------- UTILITIES -------------- */
+const safe = (v, d="") => (v === null || v === undefined ? d : v);
+function formatLocal(d){ try{ return new Date(d).toLocaleString(); } catch(e){ return d; } }
+
+/* Set today default */
+document.getElementById("fdate").value = new Date().toISOString().slice(0,10);
+
+/* Preselect factory from URL: ?Fac=F13 */
+const urlParams = new URLSearchParams(window.location.search);
+const paramFac = urlParams.get("Fac");
+if (paramFac) {
+    const sel = document.getElementById("factory");
+    sel.value = paramFac;
+}
+
+/* Timers for clocks */
+let timers = [];
+
+/* Load event */
+document.getElementById("btnLoad").addEventListener("click", loadRecords);
+document.getElementById("chkPending").addEventListener("change", applyPendingFilter);
+
+/* ----------- API WRAPPER -------------- */
+function api(cmd, data, cb) {
+    const fd = new FormData();
+    fd.append("cmd", cmd);
+    fd.append("data", JSON.stringify(data));
+
+    fetch(GS_URL, { method: "POST", body: fd })
+        .then(r => r.text())
+        .then(t => JSON.parse(t))
+        .then(cb)
+        .catch(err => alert("API error: " + err));
+}
+
+/* ----------- LOAD RECORDS -------------- */
+let lastRecords = [];
+
+function loadRecords() {
+    timers.forEach(id => clearInterval(id));
+    timers = [];
+
+    const fac = document.getElementById("factory").value;
+    const date = document.getElementById("fdate").value;
+
+    if (!fac || !date) {
+        alert("Select Factory & Date");
+        return;
+    }
+
+    api("loadRecords", { factory: fac, date: date, withDilution: 3, user: "" }, rec => {
+        lastRecords = Array.isArray(rec) ? rec : [];
+        renderCards();
+        applyPendingFilter();
+    });
+}
+
+/* ----------- RENDER CARDS -------------- */
+function renderCards() {
+    const container = document.getElementById("cards");
+    container.innerHTML = "";
+
+    lastRecords.forEach((r, idx) => {
+        const refId = safe(r[0], "");
+        const line = safe(r[5], "-");
+        const source = safe(r[3], "-");
+        const sampleName = safe(r[4], "-");
+        const sampling = safe(r[2], null);
+        const samplePhoto = safe(r[13], "");
+        const sampleResult = safe(r[14], "");
+        const waterResult = safe(r[17], "");
+        const sampleDispo = safe(r[15], "");
+        const dilute = safe(r[11], true);
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.dataset.dispo = sampleDispo; // store for pending filter
+
+        const bar = document.createElement("div");
+        bar.className = "dispo-bar " +
+            (sampleDispo === "PASS" ? "bar-pass" :
+             sampleDispo === "FAIL" ? "bar-fail" : "bar-blank");
+        card.appendChild(bar);
+
+        const row1 = document.createElement("div");
+        row1.className = "row1";
+        row1.textContent = `Line ${line} | ${source} | ${sampleName}`;
+        card.appendChild(row1);
+
+        const row2 = document.createElement("div");
+        row2.className = "row2";
+
+        const sampText = sampling ? formatLocal(sampling) : "No sampling time";
+        row2.innerHTML = `Sampling Date & Time: ${sampText}`;
+
+        const clock = document.createElement("div");
+        clock.className = "clock";
+        clock.textContent = "00:00:00";
+        row2.appendChild(clock);
+        card.appendChild(row2);
+
+        if (sampling) {
+            startClock(clock, new Date(sampling));
+        }
+
+        const row3 = document.createElement("div");
+        row3.className = "row3";
+        row3.textContent =
+            `Result : ${sampleResult || "-"} | ${waterResult || "-"} | Disposition : ${sampleDispo || "-"}`;
+        card.appendChild(row3);
+
+        const newbutton = "Upload | "+ refId
+        const updatebutton = "Update | "+ refId
+        const btn = document.createElement("button");
+        btn.className = "btn-up";
+        btn.textContent = samplePhoto ? updatebutton : newbutton ;
+        btn.onclick = () => { selectId(refId,idx,dilute)
+            //const ref = refId || idx;
+            //window.open("example.html?ref=" + encodeURIComponent(ref), "_blank");
+        };
+        card.appendChild(btn);
+
+        container.appendChild(card);
+    });
+}
+
+/* ----------- CLOCK -------------- */
+function startClock(el, startDate) {
+    const MAX_SEC = 51 * 3600; // 51 hours in seconds
+
+    function tick() {
+        const now = new Date();
+        let diff = Math.floor((now - startDate) / 1000);
+
+        // Exceeded 51 hours → stop clock
+        if (diff >= MAX_SEC) {
+            el.textContent = "⏹ --:--:--";
+            return true; // signal to stop timer
+        }
+
+        if (diff < 0) diff = 0;
+        const hh = String(Math.floor(diff / 3600)).padStart(2,'0');
+        const mm = String(Math.floor((diff % 3600) / 60)).padStart(2,'0');
+        const ss = String(diff % 60).padStart(2,'0');
+
+        el.textContent = `⏱ ${hh}:${mm}:${ss}`;
+        return false;
+    }
+
+    // First display
+    if (tick()) return;
+
+    const timerId = setInterval(() => {
+        if (tick()) {
+            clearInterval(timerId);  // stop ticking
+        }
+    }, 1000);
+
+    timers.push(timerId);
+}
+
+/* ----------- PENDING FILTER -------------- */
+function applyPendingFilter() {
+    const pendingOnly = document.getElementById("chkPending").checked;
+    const cards = document.querySelectorAll("#cards .card");
+
+    cards.forEach(card => {
+        const dispo = card.dataset.dispo || "";
+        if (pendingOnly) {
+            card.style.display = (dispo === "" ? "block" : "none");
+        } else {
+            card.style.display = "block";
+        }
+    });
+}
+
+
+
+function unselect(){
+    const divform = document.getElementById("cover");
+    const divdilute = document.getElementById("dilutecover");
+     divform.style.display = "none"
+     divdilute.style.display = "block" ;
+
+applyPendingFilter()
+
+
+}
+
+
+
+function selectId(refId, idx ,dilute) {
+    // Put refId into the input field
+    const input = document.getElementById("filenameInput");
+    if (!input) {
+        console.error("filenameInput not found");
+        return;
+    }
+    input.value = refId; // essential: updates UI state
+
+    // Select and toggle card visibility
+    const cardsContainer = document.getElementById("cards");
+    if (!cardsContainer) {
+        console.error("cards container not found");
+        return;
+    }
+    const divform = document.getElementById("cover");
+    const divdilute = document.getElementById("dilutecover");
+    const cancelBtn = document.getElementById("cancelBtn");
+    divform.style.display = "block"
+    divdilute.style.display = (dilute ? "block" : "none")
+    cancelBtn.style.display = "inline-block"
+    
+    const cards = cardsContainer.querySelectorAll(".card");
+    cards.forEach((card, i) => {
+        // "why" comment: ensures only one card remains visible
+        card.style.display = i === idx ? "block" : "none";
+    });
+}
 </script>
 
 <div id="cover" style="display:none" >
+
+<label>Update Ref ID:</label><input id="filenameInput" type="number" placeholder="Ref ID" readonly>
+
+
+
+
+
+
 <label id="filenameMsg" style="font-size:13px;display:block;margin-top:4px;"></label>
 
   <div class="section">
@@ -91,7 +416,7 @@
   </div>
 
 
-
+<div id="dilutecover" style="display:none" >
 
   <div class="section">
     <label>Image B : Sample Test for Boiled/Sterile Water photo</label>
@@ -105,7 +430,7 @@
     <input type="number" id="resultB" />
     
   </div>
-
+</div>
 
    <div class="section">
     <h4>Disposition:</h4>
@@ -116,9 +441,9 @@
     </select>
 
   </div>
-
+<hr>
   <button id="uploadBtn" disabled>Upload / Submit</button>
-  <button id="resetBtn">Reset Form</button>
+  <button id="resetBtn">Reset Form</button> <button  id="cancelBtn" onclick="unselect()">Cancel</button>
   <div id="status"></div>
 </div>
 
@@ -139,6 +464,7 @@
 
   const uploadBtn = document.getElementById("uploadBtn");
   const resetBtn = document.getElementById("resetBtn");
+  const cancelBtn = document.getElementById("cancelBtn");
   const statusDiv = document.getElementById("status");
 
   let cropperA, cropperB;
@@ -263,6 +589,7 @@
         statusDiv.textContent = "Upload successful!";
         uploadBtn.disabled = true;
         resetBtn.style.display = "inline-block";
+        cancelBtn.style.display = "none";
       } else {
         statusDiv.textContent = "Upload failed: " + response.status;
       }
@@ -274,7 +601,6 @@
 
 </body>
 </html>
-
 
 
 
