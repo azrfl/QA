@@ -57,12 +57,12 @@ position:sticky; top:0; z-index:10;
     .bar-pass  { background:#3afa00; }
     .bar-fail  { background:#f80202; }
 
-    .row1,.row2,.row3 { font-size:10px; margin-bottom:8px; color:#111; }
-    .clock { font-size:25px; font-weight:800; color:#111; display:block; margin-top:6px; }
+    .row1,.row2,.row3 { font-size:10px; margin-bottom:3px; color:#111; }
+    .clock { font-size:25px; font-weight:800; color:#111; display:inline-block; margin:6px;width:170px; }
 
     .btn-up {
-        width:100%; margin-top:6px; padding:5px; font-size:14px;
-        border-radius:5px; border:none; background:#3c97ffdc; color:white; font-weight:700;
+        width:90px; margin:6px; padding:0px; font-size:16px;height:33px;text-align:right;
+        border-radius:5px; border:none; color:#3c97ffdc; background:white; font-weight:700;
     }
   #btnLoad{font-size:22px ;padding:2px 10px}
     @media (min-width:300px){
@@ -244,6 +244,7 @@ function handleEmpty() {
         </div>
     `;
 }
+
 /* ----------- RENDER CARDS -------------- */
 function renderCards() {
     const container = document.getElementById("cards");
@@ -260,6 +261,7 @@ function renderCards() {
         const waterResult = safe(r[17], "");
         const sampleDispo = safe(r[15], "");
         const dilute = safe(r[11], true);
+        const spec = safe(r[18], 1000 );
 
         const card = document.createElement("div");
         card.className = "card";
@@ -283,11 +285,28 @@ function renderCards() {
         const sampText = sampling ? formatLocal(sampling) : "No sampling time";
         row2.innerHTML = `Sampling Date & Time: ${sampText}`;
 
+
+
+
+        card.appendChild(row2);
+
+
         const clock = document.createElement("div");
         clock.className = "clock";
         clock.textContent = "00:00:00";
-        row2.appendChild(clock);
-        card.appendChild(row2);
+        card.appendChild(clock);
+
+        const newbutton = refId + " ▶️"
+        const updatebutton =  refId + " 🔄"
+        const btn = document.createElement("button");
+        btn.className = "btn-up";
+        btn.textContent = samplePhoto ? updatebutton : newbutton ;
+        btn.onclick = () => { selectId(refId,idx,dilute,spec)
+            //const ref = refId || idx;
+            //window.open("example.html?ref=" + encodeURIComponent(ref), "_blank");
+        };
+        card.appendChild(btn);
+
 
         if (sampling) {
             startClock(clock, new Date(sampling));
@@ -299,16 +318,8 @@ function renderCards() {
             `Result : ${sampleResult || "-"} | ${waterResult || "-"} | Disposition : ${sampleDispo || "-"}`;
         card.appendChild(row3);
 
-        const newbutton = "Upload | "+ refId
-        const updatebutton = "Update | "+ refId
-        const btn = document.createElement("button");
-        btn.className = "btn-up";
-        btn.textContent = samplePhoto ? updatebutton : newbutton ;
-        btn.onclick = () => { selectId(refId,idx,dilute)
-            //const ref = refId || idx;
-            //window.open("example.html?ref=" + encodeURIComponent(ref), "_blank");
-        };
-        card.appendChild(btn);
+
+        //card.appendChild(btn);
 
         container.appendChild(card);
     });
@@ -379,7 +390,7 @@ applyPendingFilter()
 
 
 
-function selectId(refId, idx ,dilute) {
+function selectId(refId, idx ,dilute ,spec) {
     // Put refId into the input field
     const input = document.getElementById("filenameInput");
     if (!input) {
@@ -387,7 +398,8 @@ function selectId(refId, idx ,dilute) {
         return;
     }
     input.value = refId; // essential: updates UI state
-
+    const inputspec = document.getElementById("spec");
+    inputspec.value = spec
     // Select and toggle card visibility
     const cardsContainer = document.getElementById("cards");
     if (!cardsContainer) {
@@ -429,7 +441,7 @@ function selectId(refId, idx ,dilute) {
 
     <div class="section">
     <label>Result A: Sample Result value</label><br>
-    <input type="number" id="resultA" />
+    <input type="number" id="resultA" onchange="autodispo()"/>
     
   </div>
 
@@ -451,12 +463,19 @@ function selectId(refId, idx ,dilute) {
 </div>
 
    <div class="section">
-    <h4>Disposition:</h4>
-    <select id="dispo">
+
+    <table>
+<tr><th>Specification / Maximum :</th> <th> Disposition: </th></tr>
+<tr><td> <input type="number" id="spec" readonly/></td>
+<td> <select id="dispo" readonly>
       <option value="NA"></option>
       <option value="PASS">PASS</option>
       <option value="FAIL">FAIL</option>
-    </select>
+    </select></td></tr>
+
+    </table>
+
+   
 
   </div>
 <hr>
@@ -466,7 +485,8 @@ function selectId(refId, idx ,dilute) {
 </div>
 
 <script>
-  const filenameInput = document.getElementById("filenameInput");
+
+
 
   const fileInputA = document.getElementById("fileInputA");
   const fileInputB = document.getElementById("fileInputB");
@@ -488,6 +508,31 @@ function selectId(refId, idx ,dilute) {
   let cropperA, cropperB;
   let imageA = null, imageB = null;
   let croppedA = false, croppedB = false;
+  //--auto dispo --
+
+function autodispo() {
+    const resultEl = document.getElementById("resultA");
+    const specEl = document.getElementById("spec");
+    const dispoEl = document.getElementById("dispo");
+
+    if (!resultEl || !specEl || !dispoEl) return; // element missing
+
+    const resultVal = parseFloat(resultEl.value);
+    const specVal = parseFloat(specEl.value);
+
+    // If invalid numbers → cannot auto evaluate
+    if (isNaN(resultVal) || isNaN(specVal)) {
+        dispoEl.value = "NA";
+        return;
+    }
+
+    // PASS / FAIL logic
+    if (resultVal <= specVal) {
+        dispoEl.value = "PASS";
+    } else {
+        dispoEl.value = "FAIL";
+    }
+}
 
   // ------------------- UPDATED -------------------
   function checkReady() {
@@ -619,18 +664,4 @@ function selectId(refId, idx ,dilute) {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
