@@ -318,7 +318,7 @@ function renderCards() {
         const row3 = document.createElement("div");
         row3.className = "row3";
         row3.textContent =
-            `Result : ${sampleResult || "-"} | ${waterResult || "-"} | Disposition : ${sampleDispo || "-"}`;
+            `Result : ${sampleResult ?? "-"} | ${waterResult || "-"} | Disposition : ${sampleDispo || "-"}`;
         card.appendChild(row3);
 
 
@@ -675,6 +675,7 @@ updateVH();
 window.addEventListener('resize', updateVH);</script>
 </body>
 </html>
+
 
 
 
