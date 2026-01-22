@@ -185,7 +185,7 @@ position:sticky; top:0; z-index:10;
     </select>
 </td>
 <td><input type="date" id="fdate"></td>
-<td>    <button id="btnLoad">&#10227;</button></td>
+<td>    <button id="btnLoad">&gt; </button></td>
     </table>
   
    
@@ -270,6 +270,9 @@ function api(cmd, data, cb) {
 /* ----------- LOAD RECORDS -------------- */
 let lastRecords = [];
 function loadRecords() {
+    const loadbtn = document.getElementById("btnLoad");
+    loadbtn.disabled = true;
+    loadbtn.innerHTML ='&#9203;'  //&#10227;
     // Stop existing timers
     timers.forEach(id => clearInterval(id));
     timers = [];
@@ -279,6 +282,8 @@ function loadRecords() {
 
     if (!fac || !date) {
         alert("Select Factory & Date");
+            loadbtn.disabled = false;
+            loadbtn.innerHTML ='&gt;' ;
         return;
     }
     api("loadRecords", { factory: fac, date: date, withDilution: 3, user: "" }, rec => {
@@ -295,6 +300,8 @@ function loadRecords() {
     });
 
     show.innerHTML =  `${fac} | ${date} `;
+    loadbtn.disabled = false;
+    loadbtn.innerHTML ='&#10227;' ;
 }
 function handleEmpty() {
     const container = document.getElementById("cards");
@@ -643,5 +650,8 @@ updateVH();
 window.addEventListener('resize', updateVH);</script>
 </body>
 </html>
+
+
+
 
 
