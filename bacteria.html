@@ -487,7 +487,7 @@ function selectId(refId, idx ,dilute ,spec) {
 
   <div class="section">
    <label>Image A : Sample Result photo</label>
-    <input type="file" id="fileInputA" accept="image/*" />
+    <input type="file" id="fileInputA"  accept="image/*;capture=camera" />
     <img id="previewA" />
     <button id="cropBtnA" style="display:none;">Crop Image A</button>
   </div>
@@ -503,7 +503,7 @@ function selectId(refId, idx ,dilute ,spec) {
 
   <div class="section">
     <label>Image B : Sample Test for Boiled/Sterile Water photo</label>
-    <input type="file" id="fileInputB" accept="image/*" />
+    <input type="file" id="fileInputB"  accept="image/*;capture=camera" />
     <img id="previewB" />
     <button id="cropBtnB" style="display:none;">Crop Image B</button>
   </div>
@@ -725,6 +725,7 @@ updateVH();
 window.addEventListener('resize', updateVH);</script>
 </body>
 </html>
+
 
 
 
