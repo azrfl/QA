@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Upload System</title>
+    <style>
+        body { font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            ; background-color: #f0f2f5; margin: 0; padding: 5px; color:#333}
+        .form-container { max-width: 650px; margin: 0 auto; background: white; padding: 5px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); box-sizing: border-box; }
+        .login-container { max-width: 400px; margin: 100px auto; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); box-sizing: border-box; }
+        h2 { color: #1a73e8; margin-bottom: 20px; text-align: center; }
+        .header-block { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .header-block h2 { margin: 0; text-align: left; }
+        .logout-link { color: #d93025; font-weight: bold; cursor: pointer; font-size: 14px; text-decoration: none; }
+        .form-group { margin-bottom: 1px; padding: 5px; border-bottom: 1px solid #eee; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #333; }
+        input[type="text"], input[type="email"], input[type="password"] { width: 98%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        input[type="checkbox"] { padding: 10px;  width: 35px; height: 35px; border: 1px solid #ccc; border-radius: 4px; }
+         input[type="date"] ,input[type="number"] { width:49%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        select { width:49%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; } 
+        .upload-section { display: flex; align-items: center; gap: 15px; }
+        .preview-box { width: 60px; height: 60px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; background: #fafafa; border-radius: 4px; overflow: hidden; }
+        .preview-box img { width: 100%; height: 100%; object-fit: cover; }
+        .status-msg { font-size: 12px; color: #666; margin-top: 5px; }
+        .status-success { color: green; }
+        .status-loading { color: orange; }
+        .btn-action { background-color: #1a73e8; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-size: 16px; width: 100%; margin-top: 10px; }
+        .btn-action:hover { background-color: #1557b0; }
+        .btn-action:disabled { background-color: #ccc; }
+        #errorMsg { color: red; font-size: 14px; margin-top: 10px; text-align: center; font-weight: bold; }
+        #photoSectionWrapper { display: none; border-top: 3px solid #1a73e8; margin-top: 25px; padding-top: 15px; }
+        .info-notice { background-color: #e8f0fe; color: #1a73e8; padding: 12px; border-radius: 4px; margin-bottom: 15px; font-size: 14px; font-weight: bold; }
+        .c1 {border-left:3px solid  #c600f7 }
+        .c2 {border-left:6px solid  #fff309  }
+        .c3 {border-left:9px solid  #49f7b1  }
+        .c4 {border-left:12px solid  #1080ff }
+    
+    </style>
+</head>
+<body>
+
+<div id="loginView" class="login-container" style="display: none;">
+    <h3>Login : Sealing Test</h3>
+    <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group" style="border:none; padding:0;">
+            <label>Badge Number / ID</label>
+            <input type="text" id="badgeInput" required placeholder="e.g. B1024">
+        </div>
+        <div class="form-group" style="border:none; padding:0; margin-top: 15px;">
+            <label>Password</label>
+            <input type="password" id="passwordInput" required placeholder="••••••••">
+        </div>
+        <button type="submit" id="loginBtn" class="btn-action">Login</button>
+        <div id="errorMsg"></div>
+    </form>
+</div>
+
+<div id="formView" class="form-container" style="display: none;">
+    <div class="header-block"><img src="TGLOGO.png" alt="TG" style="width:100px;margin-right:5px" /> 
+          <h3> Product Packaging @ Sealing Inspection v1 </h3>
+        <a class="logout-link" onclick="handleLogout()">Sign Out</a>
+    </div>
+    
+
+    <style>
+
+        .inline{display: inline-block;min-width: 140px;width:49%}
+       .radio-group-justify {
+  display: flex;gap: 5px;
+  justify-content: space-between; /* Pushes options to the far left, middle, and far right */
+  width: 99%;                    /* Spans the entire width of the .form-group */
+}
+
+.radio-group-justify label {
+  display: flex;
+  padding:5px;border: 1px solid #bbbbbb;
+  color: #383838; 
+  align-items: left;
+  gap: 6px; /* Space between the radio button circle and its text label */
+  cursor: pointer;
+  flex: 1;  /* Optional: Gives each option an equal share of the hitbox area */
+  justify-content: center; /* Optional: Centers the content inside its equal share slot */
+}
+
+input[type="radio"]:checked + label,
+label:has(input[type="radio"]:checked) {
+  color: #0056b3; background: #cee4fd;            /* Distinct blue color */
+  font-weight: bold;          /* Makes the text pop */
+  text-shadow: 0 0 1px #0056b3; /* Prevents text shifting layout when bolding */
+}
+
+/* Optional: Make the actual radio circle blue too */
+input[type="radio"]:checked {
+  accent-color: #0056b3;      /* Works natively in modern browsers */
+  transform: scale(1.15);     /* Makes the selected circle slightly larger */
+  transition: transform 0.2s ease;
+}
+
+
+    </style>
+    <form id="mainForm" onsubmit="handleFinalSubmit(event)">
+        <div class="form-group">
+            <label class="inline">1. Date Sealing</label>
+            <input type="date" id="q1" >
+            <script>document.getElementById('q1').value = new Date().toISOString().split('T')[0];</script>
+        </div>
+        <div class="form-group">
+            <label class="inline">2. Disposition</label>
+            <select name="q2"  id="q2" onchange="updateSelectColor(this)">
+                    <option value="">-</option>
+                    <option value="Pass">Pass</option>
+                    <option value="Fail">Fail</option>
+            </select>
+            <script>
+function updateSelectColor(selectElement) {
+  const value = selectElement.value;
+
+  if (value === "Pass") {
+    selectElement.style.backgroundColor = "#55f876";
+    selectElement.style.color = "#1f1f1f";
+  } else if (value === "Fail") {
+    selectElement.style.backgroundColor = "#ff0000";
+    selectElement.style.color = "#f8f2f2";
+  } else {
+    // Reset to default browser styling if "-" is chosen
+    selectElement.style.backgroundColor = "";
+    selectElement.style.color = "";
+  }
+}
+
+ 
+  document.addEventListener("DOMContentLoaded", () => {
+    const selectElement = document.getElementById("q3");
+    const storageKey = "selected_q3_value";
+
+    // 1. Load and set the default value on page load
+    const savedValue = localStorage.getItem(storageKey);
+    if (savedValue) {
+      selectElement.value = savedValue;
+    }
+
+    // 2. Listen for changes and update local storage
+    selectElement.addEventListener("change", (event) => {
+      localStorage.setItem(storageKey, event.target.value);
+    });
+  });
+</script>
+        </div>
+        <div class="form-group">
+             <label class="inline">3. From Factory</label>
+            <select name="q3" id="q3"><option value="" >-</option>
+                <option value="F20BC" >F20BC</option>
+                <option value="F21RBD">F21RBD</option>
+                <option value="F40ARP">F40ARP</option>
+                <option value="F19BF" >F19BF</option>
+            </select>
+
+        </div>
+        <div class="form-group">
+             <label class="inline">4. Insp./Sealed by</label>
+            <input type="text" id="q4" readonly style="display:inline-block;min-width:140px;width:49%;background-color:#f5f5f5;">
+        </div>
+
+
+        <div class="form-group"> <label>5. Chemical Name</label>
+            <input type="text" id="q5">
+        </div>
+
+
+<div class="form-group"><label class="inline"> 6. Batch No.          </label> <input type="text" id="o6" style="display:inline-block;min-width:140px;width:49%; " value="'"></div>
+<div class="form-group"><label class="inline"> 7. To Factory         </label> <input type="text" id="o7" style="display:inline-block;min-width:140px;width:49%; " value="F"></div>
+<div class="form-group">
+  <label>8. Tote Tank (TT) / Blue Drum (BD) / Pail</label>
+  <div class="radio-group-justify">
+    <label><input type="radio" name="tank_type" id="oTT" value="TT"     onchange="calltype()"> TT</label>
+    <label><input type="radio" name="tank_type" id="oBD" value="BD"     onchange="calltype()"> BD</label>
+    <label><input type="radio" name="tank_type" id="oPail" value="Pail" onchange="calltype()"> Pail</label>
+  </div>
+
+</div>
+
+<script>
+function calltype(){
+ const checkedRadio = document.querySelector('input[name="tank_type"]:checked');
+document.getElementById('type').innerHTML = checkedRadio.value
+
+const elements = document.querySelectorAll('span.type');
+// Loop through each element and change its content
+elements.forEach(element => {
+    element.innerHTML = checkedRadio.value;
+});
+
+}
+
+function fname(num){
+const checkedRadio = document.querySelector('input[name="tank_type"]:checked');
+const tvalue = document.getElementById('i'+num).value 
+const typename = 'span.type'+ num ;
+const elements = document.querySelectorAll(typename);
+const text = checkedRadio.value + ' ' + tvalue;
+elements.forEach(element => {
+    element.innerHTML = text;
+});
+
+}
+
+</script>
+
+<div class="form-group"><label class="inline">9. Total of <span id="type"></span>   </label> <input type="number" id="o9"  style="display:inline-block;min-width:140px;width:49%; " ></div>
+<div class="form-group"><label class="inline">10. COA </label> <input type="checkbox" id="o10"> Yes </div>
+
+ <div id="photoSectionWrapper">
+
+            <div class="info-notice">✓ Details ready. Camera uploads active.</div>
+            <div id="photoQuestionsContainer">
+          
+<div class="form-group c1"><label class="inline"> <span class="type"></span> &nbsp;Number  </label> <input type="number" id="i1" onchange="fname(1)"></div>
+<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Cable Tie                  </label><div class="upload-section"><input type="file" id="q6"  accept="image/*" capture="environment" onchange="processAndUpload(this, 6)"> <div class="preview-box" id="preview-q6">PIC</div> </div> <div class="status-msg" id="status-q6"></div> </div>
+<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Label Sticker              </label><div class="upload-section"><input type="file" id="q7"  accept="image/*" capture="environment" onchange="processAndUpload(this, 7)"> <div class="preview-box" id="preview-q7">PIC</div> </div> <div class="status-msg" id="status-q7"></div> </div>
+<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Appearance of FG           </label><div class="upload-section"><input type="file" id="q8"  accept="image/*" capture="environment" onchange="processAndUpload(this, 8)"> <div class="preview-box" id="preview-q8">PIC</div> </div> <div class="status-msg" id="status-q8"></div> </div>
+<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Cleanliness of Packaging   </label><div class="upload-section"><input type="file" id="q9"  accept="image/*" capture="environment" onchange="processAndUpload(this, 9)"> <div class="preview-box" id="preview-q9">PIC</div> </div> <div class="status-msg" id="status-q9"></div> </div>
+<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Sealed Packaging           </label><div class="upload-section"><input type="file" id="q10" accept="image/*" capture="environment" onchange="processAndUpload(this, 10)"> <div class="preview-box" id="preview-q10">PIC</div> </div> <div class="status-msg" id="status-q10"></div> </div>
+<div class="form-group c1"><label class="inline">[<span class="type1"></span>]&nbsp;Seal No.  </label> <input type="text" id="s1" style="display:inline-block;min-width:140px;width:49%; "></div>
+
+<div class="form-group c2"><label class="inline"> <span class="type"></span> &nbsp;Number  </label> <input type="number" id="i2" onchange="fname(2)"></div>
+<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Cable Tie                  </label><div class="upload-section"><input type="file" id="q11" accept="image/*" capture="environment" onchange="processAndUpload(this, 11)"> <div class="preview-box" id="preview-q11">PIC</div> </div> <div class="status-msg" id="status-q11"></div> </div>
+<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Label Sticker              </label><div class="upload-section"><input type="file" id="q12" accept="image/*" capture="environment" onchange="processAndUpload(this, 12)"> <div class="preview-box" id="preview-q12">PIC</div> </div> <div class="status-msg" id="status-q12"></div> </div>
+<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Appearance of FG           </label><div class="upload-section"><input type="file" id="q13" accept="image/*" capture="environment" onchange="processAndUpload(this, 13)"> <div class="preview-box" id="preview-q13">PIC</div> </div> <div class="status-msg" id="status-q13"></div> </div>
+<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Cleanliness of Packaging   </label><div class="upload-section"><input type="file" id="q14" accept="image/*" capture="environment" onchange="processAndUpload(this, 14)"> <div class="preview-box" id="preview-q14">PIC</div> </div> <div class="status-msg" id="status-q14"></div> </div>
+<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Sealed Packaging           </label><div class="upload-section"><input type="file" id="q15" accept="image/*" capture="environment" onchange="processAndUpload(this, 15)"> <div class="preview-box" id="preview-q15">PIC</div> </div> <div class="status-msg" id="status-q15"></div> </div>
+<div class="form-group c2"><label class="inline">[<span class="type2"></span>]&nbsp;Seal No.  </label> <input type="text" id="s2" style="display:inline-block;min-width:140px;width:49%; "></div>
+
+<div class="form-group c3"><label class="inline"> <span class="type"></span> &nbsp;Number  </label> <input type="number" id="i3" onchange="fname(3)"></div>
+<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Cable Tie                  </label><div class="upload-section"><input type="file" id="q16" accept="image/*" capture="environment" onchange="processAndUpload(this, 16)"> <div class="preview-box" id="preview-q16">PIC</div> </div> <div class="status-msg" id="status-q16"></div> </div>
+<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Label Sticker              </label><div class="upload-section"><input type="file" id="q17" accept="image/*" capture="environment" onchange="processAndUpload(this, 17)"> <div class="preview-box" id="preview-q17">PIC</div> </div> <div class="status-msg" id="status-q17"></div> </div>
+<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Appearance of FG           </label><div class="upload-section"><input type="file" id="q18" accept="image/*" capture="environment" onchange="processAndUpload(this, 18)"> <div class="preview-box" id="preview-q18">PIC</div> </div> <div class="status-msg" id="status-q18"></div> </div>
+<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Cleanliness of Packaging   </label><div class="upload-section"><input type="file" id="q19" accept="image/*" capture="environment" onchange="processAndUpload(this, 19)"> <div class="preview-box" id="preview-q19">PIC</div> </div> <div class="status-msg" id="status-q19"></div> </div>
+<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Sealed Packaging           </label><div class="upload-section"><input type="file" id="q20" accept="image/*" capture="environment" onchange="processAndUpload(this, 20)"> <div class="preview-box" id="preview-q20">PIC</div> </div> <div class="status-msg" id="status-q20"></div> </div>
+<div class="form-group c3"><label class="inline">[<span class="type3"></span>]&nbsp;Seal No.  </label> <input type="text" id="s3" style="display:inline-block;min-width:140px;width:49%; "></div>
+
+<div class="form-group c4"><label class="inline"> <span class="type"></span> &nbsp;Number  </label> <input type="number" id="i4" onchange="fname(4)"></div>
+<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Cable Tie                  </label><div class="upload-section"><input type="file" id="q21" accept="image/*" capture="environment" onchange="processAndUpload(this, 21)"> <div class="preview-box" id="preview-q21">PIC</div> </div> <div class="status-msg" id="status-q21"></div> </div>
+<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Label Sticker              </label><div class="upload-section"><input type="file" id="q22" accept="image/*" capture="environment" onchange="processAndUpload(this, 22)"> <div class="preview-box" id="preview-q22">PIC</div> </div> <div class="status-msg" id="status-q22"></div> </div>
+<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Appearance of FG           </label><div class="upload-section"><input type="file" id="q23" accept="image/*" capture="environment" onchange="processAndUpload(this, 23)"> <div class="preview-box" id="preview-q23">PIC</div> </div> <div class="status-msg" id="status-q23"></div> </div>
+<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Cleanliness of Packaging   </label><div class="upload-section"><input type="file" id="q24" accept="image/*" capture="environment" onchange="processAndUpload(this, 24)"> <div class="preview-box" id="preview-q24">PIC</div> </div> <div class="status-msg" id="status-q24"></div> </div>
+<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Sealed Packaging           </label><div class="upload-section"><input type="file" id="q25" accept="image/*" capture="environment" onchange="processAndUpload(this, 25)"> <div class="preview-box" id="preview-q25">PIC</div> </div> <div class="status-msg" id="status-q25"></div> </div>
+<div class="form-group c4"><label class="inline">[<span class="type4"></span>]&nbsp;Seal No.  </label> <input type="text" id="s4" style="display:inline-block;min-width:140px;width:49%; "></div>
+
+ <div class="form-group"> <label>Extra/Fail Picture</label> <div class="upload-section"><input type="file" id="q26" accept="image/*" capture="environment" onchange="processAndUpload(this, 26)"> <div class="preview-box" id="preview-q26">PIC</div> </div> <div class="status-msg" id="status-q26"></div> </div>
+</div>
+
+ <button type="submit" class="btn-submit btn-action" style="margin-top:20px;">Save & Submit</button>
+        </div>
+
+       
+    </form>
+</div>
+
+<script>
+    // --- REPLACE THIS WITH YOUR DEPLOYED GOOGLE WEB APP URL ---
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZ3gxZkSFN8-FpWLSFR39PzajsORliKLLXQFEYQOdbUutu8XgaX49LHu82c-bHf762Uw/exec";
+    
+    const MAX_SIDE_LENGTH = 1000;
+    const THUMBNAIL_SIZE = 60;
+    const textInputs = ['q2','q3', 'q5', 'q5','o9'];
+    const photoWrapper = document.getElementById('photoSectionWrapper');
+
+    // --- SESSION ROUTER ENGINE ---
+    document.addEventListener("DOMContentLoaded", () => {
+        const storedName = localStorage.getItem('user_name');
+        const storedBadge = localStorage.getItem('user_badge');
+        
+        if (storedName && storedBadge) {
+            // User is logged in, prefill values and show form layout
+            document.getElementById('q4').value = storedName;
+            //document.getElementById('q2').value = storedBadge;
+            document.getElementById('loginView').style.display = "none";
+            document.getElementById('formView').style.display = "block";
+            checkTextQuestions();
+       
+        } else {
+            // User is not logged in, drop down to login layout
+            document.getElementById('formView').style.display = "none";
+            document.getElementById('loginView').style.display = "block";
+        }
+    });
+
+    // --- VIEW 1: LOGIN LOGIC ---
+    async function handleLogin(event) {
+        event.preventDefault();
+        const badge = document.getElementById('badgeInput').value.trim();
+        const password = document.getElementById('passwordInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+        const loginBtn = document.getElementById('loginBtn');
+
+        errorMsg.textContent = "";
+        loginBtn.disabled = true;
+        loginBtn.textContent = "Verifying...";
+
+        try {
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "loginVerify", badge: badge, password: password })
+            });
+            const result = await response.json();
+
+            if (result.status === "success") {
+                localStorage.setItem('user_badge', result.badge);
+                localStorage.setItem('user_name', result.name);
+                
+                // Prefill details and instantly toggle views without full page reloads
+                document.getElementById('q4').value = result.name;
+                //document.getElementById('q2').value = result.badge;
+                document.getElementById('loginView').style.display = "none";
+                document.getElementById('formView').style.display = "block";
+                checkTextQuestions();
+                     location.reload()
+            } else {
+                errorMsg.textContent = result.message || "Invalid Credentials.";
+                loginBtn.disabled = false;
+                loginBtn.textContent = "Login";
+            }
+        } catch (e) {
+            errorMsg.textContent = "Connection issue. Try again.";
+            loginBtn.disabled = false;
+            loginBtn.textContent = "Login";
+        }
+    }
+
+    function handleLogout() {
+        localStorage.removeItem('user_badge');
+        localStorage.removeItem('user_name');
+        localStorage.removeItem('submission_row_id');
+        document.getElementById('mainForm').reset();
+        document.getElementById('loginForm').reset();
+        document.getElementById('formView').style.display = "none";
+        document.getElementById('loginView').style.display = "block";
+    }
+
+    // --- VIEW 2: FORM LOGIC ---
+    // Generate Photo Questions (6 to 26) dynamically
+   //const photoContainer = document.getElementById('photoQuestionsContainer');
+   //for (let i = 6; i <= 26; i++) {
+   //    const photoNum = i - 5;
+   //    const group = document.createElement('div');
+   //    group.className = 'form-group';
+   //    group.innerHTML = `
+   //        <label>${i}. Upload Photo ${photoNum}</label>
+   //        <div class="upload-section">
+   //            <input type="file" id="q${i}" accept="image/*" capture="environment" onchange="processAndUpload(this, ${i})">
+   //            <div class="preview-box" id="preview-q${i}">PIC</div>
+   //        </div>
+   //        <div class="status-msg" id="status-q${i}"></div>
+   //    `;
+   //    photoContainer.appendChild(group);
+   //}
+
+    function checkTextQuestions() {
+        const allFilled = ['q1', 'q2', 'q3', 'q4', 'q5','o9'].every(id => document.getElementById(id).value.trim() !== "");
+        photoWrapper.style.display = allFilled ? "block" : "none";
+    }
+
+    textInputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', checkTextQuestions);
+    });
+
+    async function processAndUpload(input, questionNum) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const statusEl = document.getElementById(`status-q${questionNum}`);
+        const previewEl = document.getElementById(`preview-q${questionNum}`);
+        statusEl.textContent = "Compressing...";
+        statusEl.className = "status-msg status-loading";
+
+        try {
+            const img = await readImage(file);
+            const mediumBase64 = compressImage(img, MAX_SIDE_LENGTH);
+            const thumbnailBase64 = compressImage(img, THUMBNAIL_SIZE);
+            previewEl.innerHTML = `<img src="${thumbnailBase64}" alt="preview">`;
+
+            statusEl.textContent = "Uploading in background...";
+            let rowId = localStorage.getItem('submission_row_id') || "";
+            
+            let payload = {
+                questionNum: questionNum,
+                rowId: rowId,
+                imageData: mediumBase64,
+                fileName: file.name
+            };
+
+            if (questionNum === 6 && !rowId) {
+                payload.q1 = document.getElementById('q1').value;
+                payload.q2 = document.getElementById('q2').value;
+                payload.q3 = document.getElementById('q3').value;
+                payload.q4 = document.getElementById('q4').value;
+                payload.q5 = document.getElementById('q5').value;
+            }
+
+            const response = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+            const result = await response.json();
+
+            if (result.status === "success") {
+                statusEl.textContent = "✓ Uploaded successfully";
+                statusEl.className = "status-msg status-success";
+                if (result.rowId && !rowId) {
+                    localStorage.setItem('submission_row_id', result.rowId);
+                }
+            } else { throw new Error(result.message); }
+        } catch (error) {
+            statusEl.textContent = "❌ Upload failed.";
+            statusEl.className = "status-msg";
+        }
+    }
+
+    function readImage(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function compressImage(img, maxSide) {
+        const canvas = document.createElement('canvas');
+        let width = img.width, height = img.height;
+        if (width > height) { if (width > maxSide) { height *= maxSide / width; width = maxSide; } }
+        else { if (height > maxSide) { width *= maxSide / height; height = maxSide; } }
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        return canvas.toDataURL('image/jpeg', 0.85); 
+    }
+async function handleFinalSubmit(event) {
+    event.preventDefault();
+    const submitBtn = event.target.querySelector('.btn-submit');
+    const checkedRadio = document.querySelector('input[name="tank_type"]:checked');
+    const packtype = checkedRadio ? checkedRadio.value : "";
+    const packnu1 = document.getElementById('i1') ? document.getElementById('i1').value : "";
+    const packnu2 = document.getElementById('i2') ? document.getElementById('i2').value : "";
+    const packnu3 = document.getElementById('i3') ? document.getElementById('i3').value : "";
+    const packnu4 = document.getElementById('i4') ? document.getElementById('i4').value : "";
+        
+    submitBtn.disabled = true;
+    
+    try {
+        let rowId = localStorage.getItem('submission_row_id') || "";
+        
+        // Build base layout mapping
+        let payload = {
+            action: "finalPatch",
+            rowId: rowId,
+            q1: document.getElementById('q1').value,
+            q2: document.getElementById('q2').value,
+            q3: document.getElementById('q3').value,
+            q4: document.getElementById('q4').value,
+            q5: document.getElementById('q5').value,
+            
+             o6 : document.getElementById('o6') ? document.getElementById('o6').value : "",
+             o7 : document.getElementById('o7') ? document.getElementById('o7').value : "",
+            o8:  packtype + ' '  + [packnu1,packnu2,packnu3,packnu4].join(',') ,
+             o9 : document.getElementById('o9') ? document.getElementById('o9').value : "",
+             o10: document.getElementById('o10') && document.getElementById('o10').checked ? "Yes" : "",
+             o11 : document.getElementById('o11') ? document.getElementById('o11').value : "",
+             o12 : document.getElementById('o12') ? document.getElementById('o12').value : "",
+             o13 : document.getElementById('o13') ? document.getElementById('o13').value : "",
+             o14 : document.getElementById('o14') ? document.getElementById('o14').value : "",
+             o15 : document.getElementById('o15') ? document.getElementById('o15').value : "",
+             o16 : document.getElementById('o16') ? document.getElementById('o16').value : "",
+           
+        };
+
+        const response = await fetch(GOOGLE_SCRIPT_URL, { 
+            method: 'POST', 
+            body: JSON.stringify(payload) 
+        });
+        const result = await response.json();
+
+        if (result.status === "success") {
+            alert("Form Data Saved Successfully!");
+            localStorage.removeItem('submission_row_id');
+            location.reload()
+            
+            // Clear inputs dynamically
+           //[ 'q5', 'o6', 'o7'].forEach(id => {
+           //    const el = document.getElementById(id);
+           //    if(el) el.value = "";
+           //});
+           //
+           //photoWrapper.style.display = "none";
+           //for (let i = 6; i <= 26; i++) {
+           //    document.getElementById(`preview-q${i}`).innerHTML = "PIC";
+           //    document.getElementById(`status-q${i}`).textContent = "";
+           //}
+        }
+    } catch (e) { 
+        alert("Submission failed."); 
+    } finally { 
+        submitBtn.disabled = false; 
+    }
+}
+</script>
+</body>
+</html>
