@@ -40,6 +40,22 @@
 </head>
 <body>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div id="loginView" class="login-container" style="display: none;">
     <h3>Login : Sealing Test</h3>
     <form id="loginForm" onsubmit="handleLogin(event)">
@@ -165,7 +181,160 @@ function updateSelectColor(selectElement) {
 
         <div class="form-group"> <label>5. Chemical Name</label>
             <input type="text" id="q5">
+              <div id="suggestions"></div>
         </div>
+
+
+<style>  .autocomplete {
+    width: 200px;
+    position: relative;
+}
+
+#suggestions {
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    position: absolute;
+     width: 350px;
+    background: white;
+}
+
+#suggestions div {
+    padding: 8px;
+    cursor: pointer;
+}
+
+#suggestions div:hover {
+    background: #eee;
+}</style>
+
+<script>
+const items = [
+  
+//F20BC
+{ value: "AO 50%" },
+{ value: "Active ZnO 50%" },
+{ value: "Composite 2.0" },
+{ value: "Composite 2.16" },
+{ value: "Composite 2.32" },
+{ value: "Composite 3.55" },
+{ value: "Part A 2:1" },
+{ value: "Part A 4:1" },
+{ value: "Part B 1.35" },
+{ value: "Part B 1.95" },
+{ value: "Part B 2.3" },
+{ value: "Part B 2.3#2" },
+{ value: "Part B 2.53" },
+{ value: "Part B 3.668" },
+{ value: "Part B P6" },
+{ value: "Part B P11" },
+{ value: "Part B SG#2" },
+{ value: "PS02" },
+{ value: "Sulphur 60%" },
+{ value: "TiO2 70%" },
+{ value: "FAB01" },
+{ value: "FAB01 V3" },
+{ value: "FAB01 V4" },
+{ value: "ZDBC 50%" },
+{ value: "ZDEC 50%" },
+{ value: "ZnO 60%" },
+ 
+//F19BF" },
+{ value: "FMT-93" },
+{ value: "FMT-93 HG" },
+{ value: "FMT-98" },
+ 
+//F21RBD" },
+{ value: "TG Acid (ANR)" },
+{ value: "TG Alkaline (PD)" },
+{ value: "TG Alkaline CFC (CF)" },
+{ value: "TG Alkaline DIY V2 (DIYLF)" },
+{ value: "TG Alkaline DIY (DIY)" },
+{ value: "TG Alkaline Hydroxide Free (HF)" },
+{ value: "TG Alkaline Kleen (KB)" },
+{ value: "TG Alkaline Klor Zero (KZ)" },
+{ value: "TG Alkaline (Low Foam) (LF)" },
+{ value: "TG Alkaline 28 (FL)" },
+{ value: "TG Alkaline NBR (EC)" },
+{ value: "TG Alkaline (NR Hi CHLOR) (HC)" },
+{ value: "TG Alkaline NR SG (SG)" },
+{ value: "TG Alkaline NR PF (PF)" },
+{ value: "TG Coagulant NR SF (CR)" },
+{ value: "TG Coagulant NR SF HF (CR)" },
+{ value: "TG Coagulant NBR SF (CB)" },
+{ value: "TG Cydomer NR (CD)" },
+{ value: "TG Damp Donning (DD)" },
+{ value: "TG Damp Donning Silicone Free (DDSF)" },
+{ value: "TG Stripping Agent Silicone (SA)" },
+{ value: "TG Stripping Agent Silicone Free (SASF)" },
+{ value: "TG Stripping Agent 40% (SA)" },
+{ value: "TG Polymer NR (HI Visc) (NRHV)" },
+{ value: "TG Polymer NR (NR)" },
+{ value: "TG Polymer NR Coloured (NRC)" },
+{ value: "TG Polymer NR SG (S)" },
+{ value: "TG Pre Treatment Chlorine (PTC)" },
+{ value: "TG Pre Treatment Scrubber Waste (PTSW)" },
+{ value: "Sodium Hypochlorite 5%" },
+
+//F40ARP" },
+{ value: "Resomer (RS)" },
+{ value: "Instab 25" },
+{ value: "Tackshiled 20" },
+{ value: "MP 25" },
+{ value: "EasyStrip 40" },
+{ value: "Calsperse 40" } 
+];
+
+const input = document.getElementById("q5");
+const suggestions = document.getElementById("suggestions");
+
+input.addEventListener("input", () => {
+    const keyword = input.value.toLowerCase().trim();
+
+    suggestions.innerHTML = "";
+
+    if (!keyword) {
+        suggestions.style.display = "none";
+        return;
+    }
+
+    const matches = items.filter(item => 
+        item.value.toLowerCase().includes(keyword)
+    );
+
+    matches.slice(0, 10).forEach(item => {
+        const div = document.createElement("div");
+        div.textContent = `${item.value}`;
+
+        div.onclick = () => {
+            input.value = item.value;
+            input.dataset.value = item.value; // store actual value
+            suggestions.style.display = "none";
+
+            console.log("Selected:", item);
+        };
+
+        suggestions.appendChild(div);
+    });
+
+    suggestions.style.display =
+        matches.length ? "block" : "none";
+});
+
+document.addEventListener("click", e => {
+    if (!suggestions.contains(e.target) && e.target !== input) {
+        suggestions.style.display = "none";
+    }
+});
+</script>
+
+
+
+
+
+
+
 
 
 <div class="form-group"><label class="inline"> 6. Batch No.          </label> <input type="text" id="o6" style="display:inline-block;min-width:140px;width:49%; " ></div>
