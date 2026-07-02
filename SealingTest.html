@@ -46,16 +46,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 <div id="loginView" class="login-container" style="display: none;">
     <h3>Login : Sealing Test</h3>
     <form id="loginForm" onsubmit="handleLogin(event)">
@@ -74,7 +64,7 @@
 
 <div id="formView" class="form-container" style="display: none;">
     <div class="header-block"><img src="TGLOGO.png" alt="TG" style="width:100px;margin-right:5px" /> 
-          <h3> Product Packaging @ Sealing Inspection <sup>v1.0</sup> </h3>
+          <h3> Product Packaging @ Sealing Inspection <sup>v1.01</sup> </h3>
         <a class="logout-link" onclick="handleLogout()">Sign Out</a>
     </div>
     
@@ -386,41 +376,41 @@ elements.forEach(element => {
           
 <div class="form-group c1"><label class="inline"> <span class="type"></span> &nbsp;Number  </label> <input type="number" id="i1" onchange="fname(1)"></div>
 <div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Label Sticker **              </label><div class="upload-section"><input type="file" id="q6"  accept="image/*" capture="environment" onchange="processAndUpload(this, 6)"> <div class="preview-box" id="preview-q6">PIC</div> </div> <div class="status-msg" id="status-q6"></div> </div>
-<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Appearance of FG           </label><div class="upload-section"><input type="file" id="q7"  accept="image/*" capture="environment" onchange="processAndUpload(this, 7)"> <div class="preview-box" id="preview-q7">PIC</div> </div> <div class="status-msg" id="status-q7"></div> </div>
-<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Cleanliness of Packaging   </label><div class="upload-section"><input type="file" id="q8"  accept="image/*" capture="environment" onchange="processAndUpload(this, 8)"> <div class="preview-box" id="preview-q8">PIC</div> </div> <div class="status-msg" id="status-q8"></div> </div>
+<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Appearance of FG           </label><div class="upload-section"><input type="file" id="q7"  accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 7)"> <div class="preview-box" id="preview-q7">PIC</div> </div> <div class="status-msg" id="status-q7"></div> </div>
+<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Cleanliness of Packaging   </label><div class="upload-section"><input type="file" id="q8"  accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 8)"> <div class="preview-box" id="preview-q8">PIC</div> </div> <div class="status-msg" id="status-q8"></div> </div>
 <div class="form-group c1"><label class="inline">[<span class="type1"></span>]&nbsp;Seal No.    </label> <input type="text" id="s1" style="display:inline-block;min-width:140px;width:49%; "></div>
 
-<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Sealed Packaging           </label><div class="upload-section"><input type="file" id="q9"  accept="image/*" capture="environment" onchange="processAndUpload(this, 9)"> <div class="preview-box" id="preview-q9">PIC</div> </div> <div class="status-msg" id="status-q9"></div> </div>
-<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Cable Tie                  </label><div class="upload-section"><input type="file" id="q10" accept="image/*" capture="environment" onchange="processAndUpload(this, 10)"> <div class="preview-box" id="preview-q10">PIC</div> </div> <div class="status-msg" id="status-q10"></div> </div>
+<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Sealed Packaging           </label><div class="upload-section"><input type="file" id="q9"  accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 9)"> <div class="preview-box" id="preview-q9">PIC</div> </div> <div class="status-msg" id="status-q9"></div> </div>
+<div class="form-group c1"><label>[<span class="type1"></span>]&nbsp;Cable Tie                  </label><div class="upload-section"><input type="file" id="q10" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 10)"> <div class="preview-box" id="preview-q10">PIC</div> </div> <div class="status-msg" id="status-q10"></div> </div>
 
 <div class="form-group c2"><label class="inline"> <span class="type"></span> &nbsp;Number  </label> <input type="number" id="i2" onchange="fname(2)"></div>
-<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Label Sticker               </label><div class="upload-section"><input type="file" id="q11" accept="image/*" capture="environment" onchange="processAndUpload(this, 11)"> <div class="preview-box" id="preview-q11">PIC</div> </div> <div class="status-msg" id="status-q11"></div> </div>
-<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Appearance of FG            </label><div class="upload-section"><input type="file" id="q12" accept="image/*" capture="environment" onchange="processAndUpload(this, 12)"> <div class="preview-box" id="preview-q12">PIC</div> </div> <div class="status-msg" id="status-q12"></div> </div>
-<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Cleanliness of Packaging    </label><div class="upload-section"><input type="file" id="q13" accept="image/*" capture="environment" onchange="processAndUpload(this, 13)"> <div class="preview-box" id="preview-q13">PIC</div> </div> <div class="status-msg" id="status-q13"></div> </div>
+<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Label Sticker               </label><div class="upload-section"><input type="file" id="q11" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 11)"> <div class="preview-box" id="preview-q11">PIC</div> </div> <div class="status-msg" id="status-q11"></div> </div>
+<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Appearance of FG            </label><div class="upload-section"><input type="file" id="q12" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 12)"> <div class="preview-box" id="preview-q12">PIC</div> </div> <div class="status-msg" id="status-q12"></div> </div>
+<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Cleanliness of Packaging    </label><div class="upload-section"><input type="file" id="q13" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 13)"> <div class="preview-box" id="preview-q13">PIC</div> </div> <div class="status-msg" id="status-q13"></div> </div>
 <div class="form-group c2"><label class="inline">[<span class="type2"></span>]&nbsp;Seal No.  </label> <input type="text" id="s2" style="display:inline-block;min-width:140px;width:49%; "></div>
-<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Sealed Packaging            </label><div class="upload-section"><input type="file" id="q14" accept="image/*" capture="environment" onchange="processAndUpload(this, 14)"> <div class="preview-box" id="preview-q14">PIC</div> </div> <div class="status-msg" id="status-q14"></div> </div>
-<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Cable Tie                   </label><div class="upload-section"><input type="file" id="q15" accept="image/*" capture="environment" onchange="processAndUpload(this, 15)"> <div class="preview-box" id="preview-q15">PIC</div> </div> <div class="status-msg" id="status-q15"></div> </div>
+<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Sealed Packaging            </label><div class="upload-section"><input type="file" id="q14" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 14)"> <div class="preview-box" id="preview-q14">PIC</div> </div> <div class="status-msg" id="status-q14"></div> </div>
+<div class="form-group c2"><label>[<span class="type2"></span>]&nbsp;Cable Tie                   </label><div class="upload-section"><input type="file" id="q15" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 15)"> <div class="preview-box" id="preview-q15">PIC</div> </div> <div class="status-msg" id="status-q15"></div> </div>
 
 
 <div class="form-group c3"><label class="inline"> <span class="type"></span> &nbsp;Number  </label> <input type="number" id="i3" onchange="fname(3)"></div>
-<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Label Sticker                </label><div class="upload-section"><input type="file" id="q16" accept="image/*" capture="environment" onchange="processAndUpload(this, 16)"> <div class="preview-box" id="preview-q16">PIC</div> </div> <div class="status-msg" id="status-q16"></div> </div>
-<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Appearance of FG             </label><div class="upload-section"><input type="file" id="q17" accept="image/*" capture="environment" onchange="processAndUpload(this, 17)"> <div class="preview-box" id="preview-q17">PIC</div> </div> <div class="status-msg" id="status-q17"></div> </div>
-<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Cleanliness of Packaging     </label><div class="upload-section"><input type="file" id="q18" accept="image/*" capture="environment" onchange="processAndUpload(this, 18)"> <div class="preview-box" id="preview-q18">PIC</div> </div> <div class="status-msg" id="status-q18"></div> </div>
+<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Label Sticker                </label><div class="upload-section"><input type="file" id="q16" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 16)"> <div class="preview-box" id="preview-q16">PIC</div> </div> <div class="status-msg" id="status-q16"></div> </div>
+<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Appearance of FG             </label><div class="upload-section"><input type="file" id="q17" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 17)"> <div class="preview-box" id="preview-q17">PIC</div> </div> <div class="status-msg" id="status-q17"></div> </div>
+<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Cleanliness of Packaging     </label><div class="upload-section"><input type="file" id="q18" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 18)"> <div class="preview-box" id="preview-q18">PIC</div> </div> <div class="status-msg" id="status-q18"></div> </div>
 <div class="form-group c3"><label class="inline">[<span class="type3"></span>]&nbsp;Seal No.  </label> <input type="text" id="s3" style="display:inline-block;min-width:140px;width:49%; "></div>
-<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Sealed Packaging             </label><div class="upload-section"><input type="file" id="q19" accept="image/*" capture="environment" onchange="processAndUpload(this, 19)"> <div class="preview-box" id="preview-q19">PIC</div> </div> <div class="status-msg" id="status-q19"></div> </div>
-<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Cable Tie                    </label><div class="upload-section"><input type="file" id="q20" accept="image/*" capture="environment" onchange="processAndUpload(this, 20)"> <div class="preview-box" id="preview-q20">PIC</div> </div> <div class="status-msg" id="status-q20"></div> </div>
+<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Sealed Packaging             </label><div class="upload-section"><input type="file" id="q19" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 19)"> <div class="preview-box" id="preview-q19">PIC</div> </div> <div class="status-msg" id="status-q19"></div> </div>
+<div class="form-group c3"><label>[<span class="type3"></span>]&nbsp;Cable Tie                    </label><div class="upload-section"><input type="file" id="q20" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 20)"> <div class="preview-box" id="preview-q20">PIC</div> </div> <div class="status-msg" id="status-q20"></div> </div>
 
 
 <div class="form-group c4"><label class="inline"> <span class="type"></span> &nbsp;Number  </label> <input type="number" id="i4" onchange="fname(4)"></div>
-<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Label Sticker                </label><div class="upload-section"><input type="file" id="q21" accept="image/*" capture="environment" onchange="processAndUpload(this, 21)"> <div class="preview-box" id="preview-q21">PIC</div> </div> <div class="status-msg" id="status-q21"></div> </div>
-<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Appearance of FG             </label><div class="upload-section"><input type="file" id="q22" accept="image/*" capture="environment" onchange="processAndUpload(this, 22)"> <div class="preview-box" id="preview-q22">PIC</div> </div> <div class="status-msg" id="status-q22"></div> </div>
-<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Cleanliness of Packaging     </label><div class="upload-section"><input type="file" id="q23" accept="image/*" capture="environment" onchange="processAndUpload(this, 23)"> <div class="preview-box" id="preview-q23">PIC</div> </div> <div class="status-msg" id="status-q23"></div> </div>
+<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Label Sticker                </label><div class="upload-section"><input type="file" id="q21" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 21)"> <div class="preview-box" id="preview-q21">PIC</div> </div> <div class="status-msg" id="status-q21"></div> </div>
+<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Appearance of FG             </label><div class="upload-section"><input type="file" id="q22" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 22)"> <div class="preview-box" id="preview-q22">PIC</div> </div> <div class="status-msg" id="status-q22"></div> </div>
+<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Cleanliness of Packaging     </label><div class="upload-section"><input type="file" id="q23" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 23)"> <div class="preview-box" id="preview-q23">PIC</div> </div> <div class="status-msg" id="status-q23"></div> </div>
 <div class="form-group c4"><label class="inline">[<span class="type4"></span>]&nbsp;Seal No.  </label> <input type="text" id="s4" style="display:inline-block;min-width:140px;width:49%; "></div>
-<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Sealed Packaging             </label><div class="upload-section"><input type="file" id="q24" accept="image/*" capture="environment" onchange="processAndUpload(this, 24)"> <div class="preview-box" id="preview-q24">PIC</div> </div> <div class="status-msg" id="status-q24"></div> </div>
-<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Cable Tie                    </label><div class="upload-section"><input type="file" id="q25" accept="image/*" capture="environment" onchange="processAndUpload(this, 25)"> <div class="preview-box" id="preview-q25">PIC</div> </div> <div class="status-msg" id="status-q25"></div> </div>
+<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Sealed Packaging             </label><div class="upload-section"><input type="file" id="q24" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 24)"> <div class="preview-box" id="preview-q24">PIC</div> </div> <div class="status-msg" id="status-q24"></div> </div>
+<div class="form-group c4"><label>[<span class="type4"></span>]&nbsp;Cable Tie                    </label><div class="upload-section"><input type="file" id="q25" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 25)"> <div class="preview-box" id="preview-q25">PIC</div> </div> <div class="status-msg" id="status-q25"></div> </div>
 
 
- <div class="form-group"> <label>Extra/Fail Picture</label> <div class="upload-section"><input type="file" id="q26" accept="image/*" capture="environment" onchange="processAndUpload(this, 26)"> <div class="preview-box" id="preview-q26">PIC</div> </div> <div class="status-msg" id="status-q26"></div> </div>
+ <div class="form-group"> <label>Extra/Fail Picture</label> <div class="upload-section"><input type="file" id="q26" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, 26)"> <div class="preview-box" id="preview-q26">PIC</div> </div> <div class="status-msg" id="status-q26"></div> </div>
 </div>
 
  <button type="submit" class="btn-submit btn-action" style="margin-top:20px;">Save & Submit</button>
@@ -521,7 +511,7 @@ elements.forEach(element => {
    //    group.innerHTML = `
    //        <label>${i}. Upload Photo ${photoNum}</label>
    //        <div class="upload-section">
-   //            <input type="file" id="q${i}" accept="image/*" capture="environment" onchange="processAndUpload(this, ${i})">
+   //            <input type="file" id="q${i}" accept="image/*" capture="environment" disabled onchange="processAndUpload(this, ${i})">
    //            <div class="preview-box" id="preview-q${i}">PIC</div>
    //        </div>
    //        <div class="status-msg" id="status-q${i}"></div>
@@ -538,54 +528,86 @@ elements.forEach(element => {
         document.getElementById(id).addEventListener('input', checkTextQuestions);
     });
 
-    async function processAndUpload(input, questionNum) {
-        const file = input.files[0];
-        if (!file) return;
+async function processAndUpload(input, questionNum) {
 
-        const statusEl = document.getElementById(`status-q${questionNum}`);
-        const previewEl = document.getElementById(`preview-q${questionNum}`);
-        statusEl.textContent = "Compressing...";
-        statusEl.className = "status-msg status-loading";
+    const file = input.files[0];
+    if (!file) return;
 
-        try {
-            const img = await readImage(file);
-            const mediumBase64 = compressImage(img, MAX_SIDE_LENGTH);
-            const thumbnailBase64 = compressImage(img, THUMBNAIL_SIZE);
-            previewEl.innerHTML = `<img src="${thumbnailBase64}" alt="preview">`;
+    const statusEl = document.getElementById(`status-q${questionNum}`);
+    const previewEl = document.getElementById(`preview-q${questionNum}`);
 
-            statusEl.textContent = "Uploading in background...";
-            let rowId = localStorage.getItem('submission_row_id') || "";
-            
-            let payload = {
-                questionNum: questionNum,
-                rowId: rowId,
-                imageData: mediumBase64,
-                fileName: file.name
-            };
+    statusEl.textContent = "Compressing...";
+    statusEl.className = "status-msg status-loading";
 
-            if (questionNum === 6 && !rowId) {
-                payload.q1 = document.getElementById('q1').value;
-                payload.q2 = document.getElementById('q2').value;
-                payload.q3 = document.getElementById('q3').value;
-                payload.q4 = document.getElementById('q4').value;
-                payload.q5 = document.getElementById('q5').value;
-            }
+    try {
 
-            const response = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-            const result = await response.json();
+        const img = await readImage(file);
 
-            if (result.status === "success") {
-                statusEl.textContent = "✓ Uploaded successfully";
-                statusEl.className = "status-msg status-success";
-                if (result.rowId && !rowId) {
-                    localStorage.setItem('submission_row_id', result.rowId);
-                }
-            } else { throw new Error(result.message); }
-        } catch (error) {
-            statusEl.textContent = "❌ Upload failed.";
-            statusEl.className = "status-msg";
+        const mediumBase64 = compressImage(img, MAX_SIDE_LENGTH);
+        const thumbnailBase64 = compressImage(img, THUMBNAIL_SIZE);
+
+        previewEl.innerHTML = `<img src="${thumbnailBase64}" alt="preview">`;
+
+        statusEl.textContent = "Uploading in background...";
+
+        const q6Input = document.getElementById("q6");
+        const rowId = q6Input.dataset.rowId || "";
+
+        const payload = {
+            questionNum,
+            rowId,
+            imageData: mediumBase64,
+            fileName: file.name
+        };
+
+        // only Q6 sends form data
+        if (questionNum === 6 && !rowId) {
+            payload.q1 = document.getElementById('q1').value;
+            payload.q2 = document.getElementById('q2').value;
+            payload.q3 = document.getElementById('q3').value;
+            payload.q4 = document.getElementById('q4').value;
+            payload.q5 = document.getElementById('q5').value;
         }
+
+        const response = await fetch(
+            GOOGLE_SCRIPT_URL,
+            {
+                method: "POST",
+                body: JSON.stringify(payload)
+            }
+        );
+
+        const result = await response.json();
+
+        if (result.status !== "success") {
+            throw new Error(result.message);
+        }
+
+        statusEl.textContent = "✓ Uploaded successfully";
+        statusEl.className = "status-msg status-success";
+
+        // ONLY Q6 stores rowId
+        if (questionNum === 6 && result.rowId && !rowId) {
+
+            q6Input.dataset.rowId = result.rowId;
+
+            localStorage.setItem(
+                "submission_row_id",
+                result.rowId
+            );
+
+            setUploadEnabled(true);
+        }
+
     }
+    catch (err) {
+
+        statusEl.textContent = "❌ Upload failed.";
+        statusEl.className = "status-msg";
+
+    }
+
+}
 
     function readImage(file) {
         return new Promise((resolve, reject) => {
@@ -657,6 +679,12 @@ async function handleFinalSubmit(event) {
         if (result.status === "success") {
             alert("Form Data Saved Successfully!");
             localStorage.removeItem('submission_row_id');
+            localStorage.removeItem("submission_row_id");
+
+            const q6 = document.getElementById("q6");
+            delete q6.dataset.rowId;
+                    
+            setUploadEnabled(false);
             location.reload()
             
             // Clear inputs dynamically
@@ -677,6 +705,33 @@ async function handleFinalSubmit(event) {
         submitBtn.disabled = false; 
     }
 }
+
+
+const FIRST_UPLOAD = 6;
+const LAST_UPLOAD = 26;
+
+function setUploadEnabled(enabled) {
+    for (let i = FIRST_UPLOAD + 1; i <= LAST_UPLOAD; i++) {
+        const input = document.getElementById(`q${i}`);
+        if (input) {
+            input.disabled = !enabled;
+        }
+    }
+}
+
+window.addEventListener("load", () => {
+    const savedRowId = localStorage.getItem("submission_row_id");
+    const q6 = document.getElementById("q6");
+
+    if (savedRowId) {
+        q6.dataset.rowId = savedRowId;
+        setUploadEnabled(true);
+    } else {
+        setUploadEnabled(false);
+    }
+});
+
+
 </script>
 </body>
 </html>
