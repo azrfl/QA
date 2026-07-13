@@ -389,6 +389,20 @@ function calltype() {
     });
 }
 
+function fname(num){
+const checkedRadio = document.querySelector('input[name="tank_type"]:checked');
+const tvalue = document.getElementById('i'+num).value 
+const typename = 'span.type'+ num ;
+const elements = document.querySelectorAll(typename);
+const text = checkedRadio.value + ' ' + tvalue;
+elements.forEach(element => {
+    element.innerHTML = text;
+});
+
+}
+
+    
+
 </script>
 
 <div class="form-group"><label class="inline">9. Total of <span id="type"></span>   </label> <input type="number" id="o9"  style="display:inline-block;min-width:140px;width:49%; " ></div>
