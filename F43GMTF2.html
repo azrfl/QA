@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Crop & Upload (F43GM)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet" />
+  <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px auto; max-width: 400px;width:calc(100vw - 20px) }
+    input[type="text"], input[type="file"] { width:300px; margin: 6px 0; padding: 6px; border:1px solid #ccc ; border-radius:5px}
+    button { padding: 10px 15px; background: #0078D7; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 8px; }
+    button:disabled { background: #999; cursor: not-allowed; }
+    .section {margin-top: 15px; border-radius: 8px; }
+    img { max-width: 95%; margin-top: 8px; display: none; box-shadow:2px 2px 15px #ccc}
+    #status { margin-top: 15px; font-size: 14px; }
+    #resetBtn { display: none; background: #e81123; }
+  </style>
+</head>
+<body>
+ <h2>E) Sterilization Setting Control</h2> <span>v2.1a</span> </h2>
+
+  <label>Travel Form number (required):</label>
+  <input id="filenameInput" type="text" placeholder="PLDC082025/0003" /><br>
+<label id="filenameMsg" style="font-size:13px;display:block;margin-top:4px;"></label>
+
+  <div class="section">
+   <h4>Image A :Sticker Location</h4>
+    <input type="file" id="fileInputA" accept="image/*" />
+    <img id="previewA" />
+    <button id="cropBtnA" style="display:none;">Crop Image A</button>
+  </div>
+
+  <button id="uploadBtn" disabled>Upload / Submit</button>
+  <button id="resetBtn">Reset Form</button>
+  <div id="status"></div>
+
+  <script>
+    const filenameInput = document.getElementById("filenameInput");
+
+const filenameMsg = document.getElementById("filenameMsg");
+
+function validateFilename(e) {
+  const val = filenameInput.value.trim();
+
+  if (!val) {
+    filenameMsg.textContent = "";
+    return;
+  }
+
+  const MIN_LEN = 14; // P + 2–5 + 6 + "/" + 4 = 14–17
+
+  if (e && e.type === "keyup" && val.length < MIN_LEN) {
+    filenameMsg.textContent = "";
+    return;
+  }
+
+  const re = /^P([A-Z]{2,5})(\d{2})(\d{4})\/(\d{4})$/i;
+  const m = re.exec(val);
+
+  let msg = "⚠️ Format Error";
+  let color = "red";
+
+  if (m) {
+    const month = parseInt(m[2], 10);
+    if (month >= 1 && month <= 12) {
+      msg = "✅ Good";
+      color = "green";
+    }
+  }
+
+  filenameMsg.textContent = msg;
+  filenameMsg.style.color = color;
+}
+
+filenameInput.addEventListener("keyup", validateFilename);
+filenameInput.addEventListener("change", validateFilename);
+
+    
+    const fileInputA = document.getElementById("fileInputA");
+    const previewA = document.getElementById("previewA");
+    const cropBtnA = document.getElementById("cropBtnA");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const statusDiv = document.getElementById("status");
+
+    let cropperA;
+    let imageA = null;
+    let croppedA = false;
+
+    const API_URL = "https://script.google.com/macros/s/AKfycbzI5scea_n1twuXyQHtE_pKyNf0uP92otubAwJFncQS_tBWyxZWxyvftM33DVr929Bu/exec";
+    const SHEET_NAME = "DUR ";
+
+    function checkReady() {
+      uploadBtn.disabled = !(filenameInput.value.trim() && imageA);
+    }
+
+    function resetCropper() {
+      if (cropperA) cropperA.destroy();
+      previewA.style.display = "none";
+      cropBtnA.style.display = "none";
+      imageA = null;
+      croppedA = false;
+      checkReady();
+    }
+
+    function setupCropper(inputElem, previewElem, cropBtn) {
+      inputElem.addEventListener("change", e => {
+        resetCropper();
+        const file = e.target.files[0];
+        if (!file) return;
+        const url = URL.createObjectURL(file);
+        previewElem.src = url;
+        previewElem.style.display = "block";
+        cropBtn.style.display = "inline-block";
+        const cropper = new Cropper(previewElem, { aspectRatio: 1, viewMode: 1 });
+        cropperA = cropper;
+        cropBtn.textContent = "Crop Image A";
+      });
+
+      cropBtn.addEventListener("click", () => {
+        const cropper = cropperA;
+        const croppedFlag = croppedA;
+        if (!cropper) return;
+
+        if (!croppedFlag) {
+          const canvas = cropper.getCroppedCanvas({ width: 512, height: 512 });
+          const base64 = canvas.toDataURL("image/jpeg");
+          imageA = base64;
+          croppedA = true;
+          cropperA.destroy();
+          previewElem.src = base64;
+          statusDiv.textContent = "Image A cropped.";
+          cropBtn.textContent = "Re-Crop Image A";
+        } else {
+          const cropperNew = new Cropper(previewElem, { aspectRatio: 1, viewMode: 1 });
+          cropperA = cropperNew;
+          croppedA = false;
+          statusDiv.textContent = "Re-cropping Image A...";
+          cropBtn.textContent = "Crop Image A";
+        }
+
+        checkReady();
+      });
+    }
+
+    setupCropper(fileInputA, previewA, cropBtnA);
+    filenameInput.addEventListener("input", checkReady);
+
+    resetBtn.addEventListener("click", () => location.reload());
+
+    async function sendRequest(payload) {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      if (!response.ok || result.status !== "success") {
+        throw new Error(result.message || result.error || `Request failed: ${response.status}`);
+      }
+      return result.data;
+    }
+
+    uploadBtn.addEventListener("click", async () => {
+      const filename = filenameInput.value.trim();
+      if (!filename || !imageA) {
+        statusDiv.textContent = "Please provide a filename and cropped Image A.";
+        return;
+      }
+
+      try {
+        statusDiv.textContent = "Uploading...";
+        const rows = await sendRequest({
+          mode: "range",
+          table: SHEET_NAME,
+          filter: [`IrradiationNumber eq '${filename.replace(/'/g, "''")}'`],
+          select: ["ID"]
+        });
+
+        if (!Array.isArray(rows) || rows.length === 0) {
+          throw new Error(`No record found for irradiation number "${filename}".`);
+        }
+
+        const id = rows[0].ID;
+        if (id === undefined || id === null || id === "") {
+          throw new Error("The matching record does not contain an ID.");
+        }
+
+        await sendRequest({
+          mode: "update",
+          table: SHEET_NAME,
+          id,
+          value: { SterilizationSettingControl:imageA }
+        });
+
+        statusDiv.textContent = "Upload successful!";
+        uploadBtn.disabled = true;
+        resetBtn.style.display = "inline-block";
+      } catch (err) {
+        statusDiv.textContent = "Error: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
