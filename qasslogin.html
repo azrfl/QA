@@ -6,25 +6,30 @@
 <body>
     <button onclick="login()" id="btn" style="display:none; padding:10px;">Click to Authorize Google </button>
     
-    <script>
+<script>
         let client;
 
         function initClient() {
             client = google.accounts.oauth2.initTokenClient({
-                client_id: '80417045238-9mmbrbbt33rifgmedhb9okf9rcj64af0.apps.googleusercontent.com',
-                scope: 'https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.email',
+                client_id: '118920846900-2q1e13cuc7j1du9fnd6jse6q7ee2ldk3.apps.googleusercontent.com',
+                scope: [
+                    'https://www.googleapis.com/auth/gmail.send',
+                    'https://www.googleapis.com/auth/drive.file',
+                    'https://www.googleapis.com/auth/userinfo.email'
+                ].join(' '),
                 callback: async (resp) => {
                     if (resp.access_token) {
                         const user = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                             headers: { Authorization: `Bearer ${resp.access_token}` }
                         }).then(r => r.json());
 
-                        const expiryTime = Date.now() + (3600 * 1000); // 1 hour
+                        const expiresInMs = (resp.expires_in || 3600) * 1000;
+                        const expiryTime = Date.now() + expiresInMs;
 
                         // Send payload back to parent window
                         if (window.opener) {
                             window.opener.postMessage({
-                                type: 'GMAIL_AUTH_SUCCESS',
+                                type: 'GMAIL_AUTH_SUCCESS', // Kept unchanged so your parent listener still works
                                 token: resp.access_token,
                                 email: user.email,
                                 expiry: expiryTime
@@ -37,8 +42,7 @@
             document.getElementById('btn').style.display = 'block';
         }
 
-        function login() { client.requestAccessToken(); };
-login()
+        function login() { client.requestAccessToken(); }
     </script>
 
     <script src="https://accounts.google.com/gsi/client" onload="initClient()"></script>
