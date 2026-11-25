@@ -3,8 +3,20 @@
 <head>
     <title>Google Auth</title>
 </head>
-<body>
-    <button onclick="login()" id="btn" style="display:none; padding:10px;">Click to Authorize Google </button>
+<body  style="  display: grid;
+    min-height: 100vh;
+    box-sizing: border-box;
+    place-items: center;
+    padding: 20px;
+    background: rgb(243, 246, 250);" >
+    <button onclick="login()" id="btn" style="display:none;cursor: pointer;color:white;
+    font-weight: 600;
+    padding: 0.75rem 1.4rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    border-image: none;
+    background: #37b3fa;    box-shadow: rgba(24, 39, 58, 0.1) 0px 12px 32px;border-radius: 10px;">Click to Authorize Google </button>
     
 <script>
         let client;
